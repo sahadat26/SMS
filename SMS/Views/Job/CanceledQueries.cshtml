@@ -1,0 +1,142 @@
+﻿@model IEnumerable<SMS.Models.Job>
+@{
+
+
+    ViewBag.Title = " Canceled Queries";
+    bool ChkVal = (ViewBag.Chk as bool?).Value;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 style="color:red;">
+                <i class="fa fa-fw fa-times"></i> Canceled Queries&nbsp;&nbsp;
+
+                <form action="/Job/CanceledQuery" class="form-inline" style="float:right;">
+                    <div class="form-group">
+                        @Html.CheckBox("WithDate", ChkVal)
+                    </div>
+                    <div class="input-group date">
+                        @Html.TextBox("Start", ViewBag.StartDate as string,
+                                    new
+                                    {
+                                        @readonly = "true",
+                                        @class = "form-control input-sm",
+                                        @data_provide = "datepicker",
+                                        @data_date_autoclose = "true",
+                                        @style = "cursor:pointer;"
+                                    })
+                        <div class="input-group-addon">
+                            <span class="fa fa-fw fa-calendar"></span>
+                        </div>
+                    </div>
+                    <div class="input-group date">
+                        @Html.TextBox("End", ViewBag.EndDate as string,
+                                    new
+                                    {
+                                        @readonly = "true",
+                                        @class = "form-control input-sm",
+                                        @data_provide = "datepicker",
+                                        @data_date_autoclose = "true",
+                                        @style = "cursor:pointer;"
+                                    })
+                        <div class="input-group-addon">
+                            <span class="fa fa-fw fa-calendar"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <input type="text" id="q" name="q" class="form-control input-sm"
+                               placeholder="Search Keywords" value="@ViewBag.Keywords" />
+                        <button id="btnSearch" type="submit" class="btn btn-sm btn-success">
+                            <i class="fa fa-fw fa-search"></i> Search
+                        </button>
+
+                        @if (ViewBag.Keywords != "")
+                        {
+                            <span style="display:inline-block;">
+                                <i style="color:red;" class="fa fa-fw fa-times"></i>
+                                <a title="Clear Search" href="@Url.Content("~/Job/CanceledQuery")">Clear Search</a>
+                            </span>
+                        }
+                    </div>
+                </form>
+            </h3>
+
+            @*<div class="panel panel-primary">
+                <div class="panel-body">*@
+            @{
+
+                if (ViewBag.Info != null)
+                {
+                    <!-- Message OK -->
+                    <div class="alert alert-info">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>@ViewBag.Info</strong>
+                    </div>
+		            <!-- End Message OK -->
+                }
+                else if (ViewBag.Error != null)
+                {
+		            <!-- Message Error -->
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <p><strong>@ViewBag.Error</strong></p>
+                    </div>
+		            <!-- End Message Error -->
+                }
+            }
+
+            @using GridMvc.Html
+
+            @Html.Grid(Model).Columns(
+col =>
+{
+    col.Add(i => i.JobID).Titled("JID").Sortable(true).Filterable(true);
+    col.Add(i => i.QueryDate).Titled("Create Date").Filterable(true).Sortable(true).Format("{0:dd MMM, yyyy}");
+    col.Add(i => i.Customer.Name).Titled("Customer Name").Filterable(true).Sortable(true);
+    col.Add(i => i.QueryDescription).Titled("Query Description").Filterable(true).Sortable(true);
+    col.Add(i => i.QueryFor).Titled("Query For").Filterable(true).Sortable(true);
+    col.Add(i => i.QueryType).Titled("Query Type").Filterable(true).Sortable(true);
+    col.Add().Titled("Action").Encoded(false).Sanitized(false).RenderValueAs(m =>
+        @<text>
+            <a href="#" onclick="RestoreQuery(@m.JobID)" title="Revoke Query"><i style="color:green;" class="fa fa-fw fa-recycle"></i></a>
+        </text>
+        );
+}
+            ).WithPaging(15, 20)
+            
+        </div>
+    </div>
+</div>
+@*</div>
+    </div>*@
+@section scripts
+{
+    @Scripts.Render("~/bundles/gridmvc")
+    @Scripts.Render("~/bundles/ajax")
+    <script type="text/javascript">
+        function RestoreQuery(JID) {
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Job/RestoreQuery/',
+                    data: { 'JobID': JID },
+                    datatype: 'html',
+                    success: function (result) {
+                        if (result.success) {
+                            alert(result.message);
+                            location.reload();
+                        }
+                        else {
+                            alert(result.message);
+                        }
+                    }
+                }
+                );
+        }
+    </script>
+}
+
+
+

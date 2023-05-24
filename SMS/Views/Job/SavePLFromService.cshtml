@@ -1,0 +1,161 @@
+﻿
+@{
+    ViewBag.Title = "Manage Products";
+    var job = ViewBag.Job as SMS.Models.Job;
+}
+
+<div class="container-fluid">
+    <div class="col-lg-9">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 style="color:royalblue;"><i class="fa fa-fw fa-rub"></i> Manage Service Contract Products</h3>
+                <div class="panel panel-primary">
+
+                    <div class="panel-body">
+                        <br />
+                        @{
+
+                            if (ViewBag.Info != null)
+                            {
+                    <!-- Message OK -->
+                                <div class="alert alert-info">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                    <strong>@ViewBag.Info</strong>
+                                </div>
+		            <!-- End Message OK -->
+                            }
+                            else if (ViewBag.Error != null)
+                            {
+		            <!-- Message Error -->
+                                <div class="alert alert-danger">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                    <p><strong>@ViewBag.Error</strong></p>
+                                </div>
+		            <!-- End Message Error -->
+                            }
+                        }
+                        @using (Html.BeginForm("SavePLFromService", "Job", FormMethod.Post, new { @class = "form-inline", @autocomplete = "off" }))
+                        {
+                            @Html.Hidden("JobID",job.JobID)
+                            if((ViewBag.SP as SelectList).Count()>0)
+                            {
+                                <div class="col-lg-12">
+                                <fieldset>
+                                    <legend>Product Name</legend>
+                                    <div class="form-group">
+                                        @Html.Label("Select Product")<br />
+                                        @Html.DropDownList("SPID", ViewBag.SP as SelectList, new { @class = "form-control input-sm", @style = "width:250px;" })
+                                        <button type="submit" class="btn btn-sm btn-primary" id="btnSubmit">
+                                            <i class="fa fa-fw fa-save"></i> Add Selected Product
+                                        </button>
+                                    </div>
+                                    
+                                </fieldset>
+                            </div>    
+                            }
+                            
+                        }
+
+                        <div class="col-lg-12" style="padding-bottom:10px;">
+                            <table class="table table-condensed table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Product Name</th>
+
+                                        <th>Specification</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var row in job.Products.OrderBy(a => a.ProductLineID))
+                                    {
+                                        <tr>
+                                            <td>@row.Product.ProductName</td>
+                                            <td>@Html.DisplayFor(m => row.Property)</td>
+                                            <td>
+                                                <a href="@Url.Content("~/Job/DeleteProductLine?PLID=" 
+                                                + row.ProductLineID+"&JobID="+job.JobID)" title="Delete"><i style="color:red;" class="fa fa-fw fa-times"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-3">
+        <h3 style="color:royalblue;"><i class="fa fa-fw fa-file"></i> Query Info</h3>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <table class="table table-condensed table-striped">
+                    <tbody>
+
+                        <tr>
+                            <td class="col-lg-4"><label>Query Date</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.QueryDate)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Customer Name</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.Customer.Name)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Query For</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.QueryFor)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Query Type</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.QueryType)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Query Description</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.QueryDescription)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Status</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.Status)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <p style="text-align:center">
+            <br />
+            <a href="@Url.Content("~/Job/SaveJobCard?JID="+job.JobID)" class="btn btn-lg btn-primary">
+                <i class="fa fa-fw fa-tasks"></i>
+                @if (job.State == SMS.Models.EState.Pending)
+                {
+                    <span>Create Job Card</span>
+                }
+                else
+                {
+                    <span>Go To Job Card</span>
+                }
+
+            </a>
+            <a href="@Url.Content("~/Job/Queries")" class="btn btn-lg btn-success">
+                <i class="fa fa-fw fa-backward"></i> Back to List
+            </a>
+        </p>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    
+}
+
+

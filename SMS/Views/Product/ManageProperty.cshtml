@@ -1,0 +1,118 @@
+﻿@model SMS.Models.Property
+<div id="DialogProperty" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" style="width:400px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    <i class="fa fa-fw fa-jsfiddle" style="color:#0094ff"></i> Manage Property
+                </h4>
+            </div>
+
+
+
+            <div class="modal-body">
+                @using (Ajax.BeginForm("PropertyAddUpdate", "Product", new AjaxOptions { HttpMethod = "POST", OnBegin = "StartEvent", OnSuccess = "SuccessEvent" }, new { @class = "form-horizontal", @autocomplete = "off" }))
+                {
+                    @Html.HiddenFor(i => i.PropertyID)
+                    <div class="form-group">
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(t => t.Name, new { @class = "form-control", @placeholder = "Property Name" })
+                            @Html.ValidationMessageFor(t => t.Name, null, new { @class = "text-danger" })
+                        </div>
+                        <div class="col-lg-4">
+                            <button id="btnSubmit" type="submit" class="btn btn-primary" data-loading-text="Saving...">
+                                <i class="fa fa-fw fa-save"></i> Save
+                            </button>
+                        </div>
+                    </div>
+                }
+                <table class="table table-condensed table-bordered col-lg-12">
+                    <thead>
+                        <tr>
+                            <th class="col-lg-8">
+                                Property Name
+                            </th>
+                            <th style="text-align:center;" class="col-lg-4">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblProperty">
+                        @foreach (var item in (ViewBag.Properties as List<SMS.Models.Property>))
+                        {
+                            <tr class="fakeclass" id="@("tblrow"+item.PropertyID)">
+                                <td>@Html.DisplayFor(m => item.Name)</td>
+                                <td style="text-align:center;">
+                                    <a onclick="PropertyEdit(@item.PropertyID)" href="#">
+                                        <i class="fa fa-fw fa-pencil-square"></i> Edit
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" id="btnClose" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-fw fa-times-circle"></i>  Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+
+    function StartEvent()
+    {
+        $("#btnSubmit").button('loading');
+    }
+    function PropertyEdit(ID)
+    {
+        $.ajax(
+                 {
+                     type: 'GET',
+                     url: '/Product/PropertyEdit',
+                     data:{'ID':ID},
+                     datatype: 'html',
+                     success: function (result) {
+                         $("#PropertyID").val(result.PropertyID);
+                         $("#Name").val(result.Name);
+                         $(".fakeclass").css("background","");
+                         $("#tblrow"+ID).css("background","orange");
+                     }
+                 }
+                 );
+    }
+    function SuccessEvent(response)
+    {
+        if(response.flag=="true")
+        {
+            var bodyhtml = "";
+            $.each(response.listdata, function (i, val) {
+                bodyhtml = bodyhtml + "<tr class='fakeclass' id='tblrow" + val.PropertyID + "'>" +
+                    "<td>"+val.Name+"</td>"+
+                        "<td style='text-align:center;'>"+
+                            "<a href='#' onclick='PropertyEdit("+val.PropertyID+")'>"+
+                                "<i class='fa fa-fw fa-pencil-square'></i> Edit"+
+                            "</a>"
+                "</td>"+
+            "</tr>";
+            });
+            $("#tblProperty").html(bodyhtml);
+            $("#PropertyID").val(0);
+            $("#Name").val("");
+            //RefreshPropertyList();
+        }
+        $("#btnSubmit").button('reset');
+        alert(response.msg);
+    }
+    $('#DialogProperty').on('hide.bs.modal', function () 
+    {
+        RefreshPropertyList();
+    });
+</script>

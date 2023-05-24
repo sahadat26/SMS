@@ -1,0 +1,538 @@
+﻿@model IEnumerable<SMS.Models.SC_ASEReport>
+@{
+    ViewBag.Title = "ApprovedASECom";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using SMS.Models
+@{
+    UserInfo UI = new SMS.Models.UserInfo();
+    if (Request.IsAuthenticated)
+    {
+        UI = UserInfo.GetUserInfo(User.Identity.Name);
+        
+    }
+
+    int userType = (int)UI.User.userType;
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            @{
+
+                if (ViewBag.Info != null)
+                {
+                    <!-- Message OK -->
+                    @*<div class="alert alert-info">
+                            <a href="#" class="close" data-dismiss="alert">&times;</a>
+                            <strong>@ViewBag.Info</strong>
+                        </div>*@
+		            <!-- End Message OK -->
+                }
+                else if (ViewBag.Error != null)
+                {
+		            <!-- Message Error -->
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <p><strong>@ViewBag.Error</strong></p>
+                    </div>
+		            <!-- End Message Error -->
+                }
+            }
+
+        </div>
+    </div>
+
+    <div class="row">
+
+
+        <div class="col-lg-12">
+            <h3 style="color:royalblue;">
+                <i class="fa fa-check-circle-o"></i> Pending for Approval &nbsp;&nbsp;
+
+
+                <form action="/SalesCommission/ApprovedASECom" class="form-inline" style="float:right;" id="frm">
+
+
+                    <div class="form-group">
+
+                        <div class="input-group date">
+                         
+                            @Html.DropDownList("month", (IEnumerable<SelectListItem>)ViewData["months"],new { @class = "js-example-basic-single form-control input-sm", @style = "width:200px" })
+                                                                        
+                           
+                        </div>
+
+                        @*<div class="input-group date">
+                            @Html.TextBox("Start", (string)ViewBag.startDate,
+                                    new
+                                    {
+                                        @readonly = "true",
+                                        @class = "form-control input-sm",
+                                        @data_provide = "datepicker",
+                                        @data_date_autoclose = "true",
+                                        @style = "cursor:pointer;"
+                                    })
+                            <div class="input-group-addon">
+                                <span class="fa fa-fw fa-calendar"></span>
+                            </div>
+                        </div>*@
+                    </div>
+                    @*<div class="form-group">
+                        <div class="input-group date">
+                            @Html.TextBox("End", (string)ViewBag.endDate,
+                                    new
+                                    {
+                                        @readonly = "true",
+                                        @class = "form-control input-sm",
+                                        @data_provide = "datepicker",
+                                        @data_date_autoclose = "true",
+                                        @style = "cursor:pointer;"
+                                    })
+                            <div class="input-group-addon">
+                                <span class="fa fa-fw fa-calendar"></span>
+                            </div>
+                        </div>
+                    </div>*@
+                    <div class="form-group">
+                        <input type="text" class="form-control input-sm" placeholder="Enter Year" value="@ViewBag.year" name="year" required />
+                    </div>
+
+                    <div class="form-group">
+                        @*@Html.DropDownListFor(t => t.ASEID, ViewBag.ASE as SelectList, "Select ASE", new { @class = "form-control input-sm", @style = "width:200px" })
+                            @Html.ValidationMessageFor(t => t.ASEID, null, new { @class = "text-danger" })*@
+
+
+                        @Html.DropDownList("ASEID", ViewBag.ASE as SelectList, "Select ASE", new { @class = "js-example-basic-single form-control input-sm", @style = "width:200px" })
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        @*<input type="text" id="q" name="q" class="form-control input-sm"
+                            placeholder="Search Keywords" value="@ViewBag.SearchText" />*@
+                        <button id="btnSearch" type="submit" class="btn btn-sm btn-success">
+                            <i class="fa fa-fw fa-search"></i> Search
+                        </button>
+
+
+                        @*<button data-loading-text="Syncing......." type="button" class="btn btn-sm btn-warning" id="btnSync">
+                                <i class="fa fa-fw fa-refresh"></i>Sync Collection
+                            </button>*@
+                    </div>
+
+
+
+
+
+                </form>
+            </h3>
+
+
+
+
+
+            @using GridMvc.Html
+
+            <div class="col-lg-12" style="overflow:scroll;">
+
+                @Html.Grid(Model).Columns(
+col =>
+{
+    if (userType > 1)
+    {
+        col.Add().Titled("Action").Encoded(false).Sanitized(false).RenderValueAs(m =>
+            @<text>
+
+                @*<a href="/SalesCommission/RejectInvoice?paymentDoc=@m.PAYMENT_DOC&invoiceDoc=@m.Invoice_Doc&saleType=@m.SaleType&customername=@m.Customer_Name&ASEID=" ><i style="color: green; font-size: 18px" class="fa fa-trash-o"></i></a>*@
+
+                <a onclick="reject('@m.PAYMENT_DOC','@m.Invoice_Doc','@m.SaleType','@m.Customer_Name')"><i style="color: green; font-size: 18px" class="fa fa-trash-o"></i></a>
+
+            </text>
+                );
+    }
+
+
+
+
+
+    col.Add(i => i.Invoice_Doc).Titled("Invoice No").Sortable(true).Filterable(true);
+    col.Add(i => i.InvoiceDate).Titled("Invoice Date").Sortable(true).Filterable(true);
+    col.Add(i => i.CollectionDate).Titled("Payment Date").Sortable(true).Filterable(true);
+    col.Add(i => i.Duration).Titled("Duration").Sortable(true).Filterable(true);
+
+    col.Add(i => i.Customer_Name).Titled("Customer Name").Sortable(true).Filterable(true);
+    col.Add(i => i.SaleAmt).Titled("Sale Amount").Format("{0:n2}").Sortable(true).Filterable(true);
+    col.Add(i => i.Collections).Titled("Collection Amount").Format("{0:n2}").Sortable(true).Filterable(true);
+    //col.Add(i => i.CollectionPerAmt).Titled("Collection Per Amount").Sortable(true).Filterable(true);
+    //col.Add(i => i.Bonus).Titled("Bonus").Sortable(true).Filterable(true);
+
+    //  col.Add(i => i.ASE_Portion).Titled("ASE portion").Sortable(true).Filterable(true);
+    col.Add(i => i.Claimable_ASE_Collection).Titled("Claimable ASE portion").Format("{0:n2}").Sortable(true).Filterable(true);
+
+    //col.Add(i => i.Revenue).Titled("Revenue").Filterable(true).Sortable(true);
+    col.Add(i => i.SaleType).Titled("Sales Type").Filterable(true).Sortable(true);
+    col.Add(i => i.lubeQty).Titled("Lube Qty").Filterable(true).Sortable(true);
+    col.Add(i => i.serviceBonus).Titled("Service Bonus").Format("{0:n2}").Filterable(true).Sortable(true);
+
+    col.Add(i => i.Eligible).Titled("Eligible").Filterable(true).Sortable(true);
+
+}
+).WithPaging(15, 20)
+            </div>
+
+
+            @*<div class="col-lg-4" >
+                    <h3>TDS & VDS </h3>
+                </div>*@
+
+        </div>
+    </div>
+    <br />
+
+    @if (ViewBag.ApprovedLog == 1)
+    {
+        <div class="row">
+            <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <p><strong>You have successfully approved for this month </strong></p>
+            </div>
+        </div>
+    }
+    else
+    {
+        if (Model.Count() > 0)
+        {
+            <form action="/SalesCommission/ApprovedASEReport">
+
+                <div class="row">
+
+                    <input type="hidden" name="startDate" value="@ViewBag.startDate">
+                    <input type="hidden" name="endDate" value="@ViewBag.endDate">
+                    <input type="hidden" name="duration" value="@ViewBag.duration">
+                    <input type="hidden" name="ASEID" value="@ViewBag.ASEID">
+
+
+                    <div class="col-lg-12">
+                        <h3 style="color:royalblue;">
+                            Spare Parts &nbsp;&nbsp;
+                        </h3>
+                        <table class="table table-responsive">
+                            <tr>
+                                <th>Sales Target of Respective Month</th>
+                                <th>Collection Target of Respective Month</th>
+                                <th>Sales During Period</th>
+                                <th>Collection Achievement of Respective Month</th>
+                                <th>Collection Achievment %</th>
+                                <th>Commision</th>
+                                <th>Commision Bonus</th>
+                                <th>Additional % </th>
+                                <th>Additional Amount</th>
+                                <th>Total Commision</th>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    @String.Format("{0:0,0.00}",@ViewBag.calculationResult.spareSalesTarget)
+                                    
+                                    <input type="hidden" name="spareSalesTarget" value="@ViewBag.calculationResult.spareSalesTarget">
+                                </td>
+
+                                <td>
+                                    @String.Format("{0:0,0.00}", @ViewBag.calculationResult.spareTarget)
+                                   
+                                    <input type="hidden" name="spareTarget" value="@ViewBag.calculationResult.spareTarget">
+                                </td>
+                                <td>
+                                    @String.Format("{0:0,0.00}", @ViewBag.calculationResult.spareSalesDuringPeriod)
+                                   
+                                    <input type="hidden" name="spareSalesDuringPeriod" value="@ViewBag.calculationResult.spareSalesDuringPeriod">
+                                </td>
+                                <td>
+                                   
+                                    @String.Format("{0:0,0.00}", @ViewBag.calculationResult.spareCollection)
+                                    <input type="hidden" name="spareCollection" value="@ViewBag.calculationResult.spareCollection">
+                                </td>
+                                <td>
+                                    @String.Format("{0:0,0.00}", @ViewBag.calculationResult.spareCollectionPerCent)
+                                  
+                                    <input type="hidden" name="spareCollectionPerCent" value="@ViewBag.calculationResult.spareCollectionPerCent">
+                                </td>
+                                <td>
+                                    
+                                    @String.Format("{0:0,0.00}", @ViewBag.calculationResult.spareCommision)
+                                    <input type="hidden" name="spareCommision" value="@ViewBag.calculationResult.spareCommision">
+
+                                </td>
+                                <td>
+                                    
+                                    @String.Format("{0:0,0.00}", @ViewBag.calculationResult.spareBonus)
+
+                                    <input type="hidden" name="spareBonus" value="@ViewBag.calculationResult.spareBonus">
+                                </td>
+                                <td>
+                                    @ViewBag.calculationResult.spareAdditionalperCent
+                                    <input type="hidden" name="spareAdditionalperCent" value="@ViewBag.calculationResult.spareAdditionalperCent">
+                                </td>
+                                <td>
+                                    @ViewBag.calculationResult.spareAdditionalAmount
+                                    <input type="hidden" name="spareAdditionalAmount" value="@ViewBag.calculationResult.spareAdditionalAmount">
+                                </td>
+                                <td>
+                                  
+                                    @String.Format("{0:0,0.00}", @ViewBag.calculationResult.spareTotalCommisionCalculation)
+                                    <input type="hidden" name="spareTotalCommision" value="@ViewBag.calculationResult.spareTotalCommisionCalculation">
+                                </td>
+
+                            </tr>
+
+
+
+
+                        </table>
+                    </div>
+                    <div class="col-lg-4">
+                        <h3 style="color:royalblue;">
+                            Lube Oil &nbsp;&nbsp;
+                        </h3>
+                        <table class="table table-responsive">
+                            <tr>
+                                <th>Collections Ltr</th>
+                                <th>Commision</th>
+
+                            </tr>
+                            <tr>
+
+                                <td>
+                                    @ViewBag.calculationResult.lubeOilCollection
+                                    <input type="hidden" name="lubeOilCollection" value="@ViewBag.calculationResult.lubeOilCollection">
+                                </td>
+                                <td>
+                                    @ViewBag.calculationResult.lubeOilCommision
+                                    <input type="hidden" name="lubeOilCommision" value="@ViewBag.calculationResult.lubeOilCommision">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-lg-4">
+                        <h3 style="color:royalblue;">
+                            Service Bill &nbsp;&nbsp;
+                        </h3>
+                        <table class="table table-responsive">
+                            <tr>
+                                <th>Service Collections</th>
+
+                                <th>Service Commision Bonus</th>
+                                <th>TDS&VDS Collections</th>
+                                <th>TDS&VDS Bonus</th>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                  
+                                    @String.Format("{0:0,0.00}", @ViewBag.calculationResult.serviceCollection)
+                                    <input type="hidden" name="serviceCollection" value="@ViewBag.calculationResult.serviceCollection">
+                                </td>
+                                <td>
+                                 
+                                    @String.Format("{0:0,0.00}", @ViewBag.calculationResult.serviceBonus)
+                                    <input type="hidden" name="serviceBonus" value="@ViewBag.calculationResult.serviceBonus">
+                                </td>
+                                <td>
+                                 
+                                    @String.Format("{0:0,0.00}", @ViewBag.calculationResult.serviceTDSVDSCollection)
+                                    <input type="hidden" name="serviceTDSVDSCollection" value="@ViewBag.calculationResult.serviceTDSVDSCollection">
+                                </td>
+                                <td>
+                                   
+                                    @String.Format("{0:0,0.00}", @ViewBag.calculationResult.serviceTDSVDSBonus)
+                                    <input type="hidden" name="serviceTDSVDSBonus" value="@ViewBag.calculationResult.serviceTDSVDSBonus">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <h3 style="color:royalblue;">
+                            Achievement of CSA/SnM/OnM Renewal &nbsp;&nbsp;
+                        </h3>
+                        <table class="table table-responsive">
+                            <tr>
+                                <th>Existing</th>
+                                <th>New/Fresh</th>
+                                <th>Commision</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @ViewBag.calculationResult.csaExisting
+                                    <input type="hidden" name="csaExisting" value="@ViewBag.calculationResult.csaExisting">
+                                </td>
+                                <td>
+                                    @ViewBag.calculationResult.csaNew
+                                    <input type="hidden" name="csaNew" value="@ViewBag.calculationResult.csaNew">
+                                </td>
+                                <td>
+                                    @ViewBag.calculationResult.csaCommision
+                                    <input type="hidden" name="csaCommision" value="@ViewBag.calculationResult.csaCommision">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+
+                </div>
+
+                <div class="row">
+
+                    @if (ViewBag.UserDetails != null)
+                    {
+                        <div class="col-lg-6">
+                            <h3 style="color:royalblue;">
+                                Monthly Salary &nbsp;&nbsp;
+                            </h3>
+                            <table class="table table-responsive">
+
+                                @*<input type="hidden" name="Name" value="@ViewBag.UserDetails.FullName" />
+                                    <input type="hidden" name="userId" value="@ViewBag.UserDetails.UserName" />*@
+                                <tr>
+                                    <th>Basic Salary</th>
+                                    <th>Conveyance Allowance</th>
+                                    <th>Food Allowance</th>
+                                    <th>Mobile Allowance</th>
+                                    <th>Additional Allowance</th>
+                                    <th>Deduction Allowance</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                      
+                                        @String.Format("{0:0,0.00}", @ViewBag.UserDetails.BasicSalary)
+                                        <input type="hidden" name="BasicSalary" value="@ViewBag.UserDetails.BasicSalary " />
+                                    </td>
+                                    <td>
+                                       
+                                        @String.Format("{0:0,0.00}", @ViewBag.UserDetails.ConveyanceAllowance)
+                                        <input type="hidden" name="ConveyanceAllowance" value="@ViewBag.UserDetails.ConveyanceAllowance " />
+                                    </td>
+                                    <td>
+                                      
+                                        @String.Format("{0:0,0.00}", @ViewBag.UserDetails.FoodAllowance)
+                                        <input type="hidden" name="FoodAllowance" value="@ViewBag.UserDetails.FoodAllowance " />
+                                    </td>
+                                    <td>
+                                      
+                                        @String.Format("{0:0,0.00}", @ViewBag.UserDetails.MobileAllowance)
+                                        <input type="hidden" name="MobileAllowance" value="@ViewBag.UserDetails.MobileAllowance " />
+                                    </td>
+                                    <td>
+                                       
+                                        @String.Format("{0:0,0.00}", @ViewBag.UserDetails.AdditionalAllowance)
+                                        <input type="hidden" name="AdditionalAllowance" value="@ViewBag.UserDetails.AdditionalAllowance " />
+                                    </td>
+                                    <td>
+                                      
+                                        @String.Format("{0:0,0.00}", @ViewBag.UserDetails.DeductionAllowance)
+                                        <input type="hidden" name="DeductionAllowance" value="@ViewBag.UserDetails.DeductionAllowance " />
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </div>
+                    }
+
+
+                    <div class="col-lg-6">
+
+
+
+                        <h3 style="color:royalblue;">
+                            Total Calculation &nbsp;&nbsp;
+
+                        </h3>
+
+                        <table class="table table-responsive">
+                            <tr>
+                                <th>Total Commision</th>
+                                <th>Total Monthly Salary</th>
+                                <th>Grand Total</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                   
+                                    @String.Format("{0:0,0.00}", @ViewBag.calculationResult.totalCommisionCalculation)
+                                    <input type="hidden" name="totalCommision" value="@ViewBag.calculationResult.totalCommisionCalculation">
+                                </td>
+                                <td>
+                                   
+                                    @String.Format("{0:0,0.00}",  (Convert.ToDecimal(ViewBag.UserDetails.BasicSalary) + Convert.ToDecimal(ViewBag.UserDetails.ConveyanceAllowance) + Convert.ToDecimal(ViewBag.UserDetails.FoodAllowance) + Convert.ToDecimal(ViewBag.UserDetails.MobileAllowance) + Convert.ToDecimal(ViewBag.UserDetails.AdditionalAllowance) - Convert.ToDecimal(ViewBag.UserDetails.DeductionAllowance)))
+                                    <input type="hidden" name="totalCommision" value="@ViewBag.calculationResult.totalCommisionCalculation">
+                                </td>
+                                <td>
+                                   
+                                    @String.Format("{0:0,0.00}",  ((Convert.ToDecimal(ViewBag.UserDetails.BasicSalary) + Convert.ToDecimal(ViewBag.UserDetails.ConveyanceAllowance) + Convert.ToDecimal(ViewBag.UserDetails.FoodAllowance) + Convert.ToDecimal(ViewBag.UserDetails.MobileAllowance) + Convert.ToDecimal(ViewBag.UserDetails.AdditionalAllowance) - Convert.ToDecimal(ViewBag.UserDetails.DeductionAllowance)) + Convert.ToDecimal(ViewBag.calculationResult.totalCommisionCalculation)))
+                                    <input type="hidden" name="totalCommision" value="@ViewBag.calculationResult.totalCommisionCalculation">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+
+
+
+
+
+                </div>
+                <div class="row">
+                    <center>
+                        <button id="btnSearch" type="submit" class="btn btn-lg btn-success" onclick="return confirm ('Are you sure you want to Approved ?')">
+                            <i class="fa fa-check"></i> Approved
+                        </button>
+                    </center>
+
+                </div>
+
+            </form>
+        }
+
+    }
+
+
+
+
+
+
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        function reject(paymentDoc, invoiceDoc, saleType, customername) {
+
+            var confirmText = "Are you sure you want to Delete";
+
+            if (confirm(confirmText)) {
+
+                $.ajax({
+
+                    type: 'Get',
+                    url: '/SalesCommission/RejectInvoice',
+                    data: { 'paymentDoc': paymentDoc, 'invoiceDoc': invoiceDoc, 'saleType': saleType, 'customername': customername, 'ASEID': $("#ASEID").val(), 'Start': $("#Start").val(), 'End': $("#End").val() },
+
+                    sucess: function (data) {
+
+                        location.reload(true);
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        location.reload(true);
+                    }
+
+
+                });
+            }
+
+
+           
+        }
+    </script>
+}

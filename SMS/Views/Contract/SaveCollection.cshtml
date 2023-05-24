@@ -1,0 +1,212 @@
+﻿@model SMS.Models.ServiceContractCollection
+
+@{
+    ViewBag.Title = "Manage Service Contract Collection";
+    var sc = ViewBag.SC as SMS.Models.ServiceContract;
+    var sp=ViewBag.SP as SMS.Models.ServiceProduct;
+}
+
+<div class="container-fluid">
+    <div class="col-lg-9">
+        
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 style="color:royalblue;"><i class="fa fa-fw fa-rub"></i> Manage Service Contract Collection</h3>
+                <div class="panel panel-primary">
+
+                    <div class="panel-body">
+                        <br />
+                        @{
+
+                            if (ViewBag.Info != null)
+                            {
+                    <!-- Message OK -->
+                                <div class="alert alert-info">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                    <strong>@ViewBag.Info</strong>
+                                </div>
+		            <!-- End Message OK -->
+                            }
+                            else if (ViewBag.Error != null)
+                            {
+		            <!-- Message Error -->
+                                <div class="alert alert-danger">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                    <p><strong>@ViewBag.Error</strong></p>
+                                </div>
+		            <!-- End Message Error -->
+                            }
+                        }
+                        @using (Html.BeginForm("SaveCollection", "Contract", FormMethod.Post, new { @class = "form-inline", @autocomplete = "off" }))
+                        {
+                            @Html.HiddenFor(m=>m.ServiceContractCollectionID)
+                            @Html.Hidden("SCID",sc.ServiceContractID)
+                            <div class="col-lg-12">
+                                
+                                <div class="form-group">
+                                    @Html.LabelFor(t=>t.ServiceProductID)<br />
+                                    @Html.DropDownListFor(t => t.ServiceProductID, ViewBag.Products as SelectList, "Select Product", new { @class = "form-control input-sm", @style = "width:250px;" })
+                                    @Html.ValidationMessageFor(t => t.ServiceProductID, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(t => t.CollectedAmount)<br />
+                                    @Html.TextBoxFor(t => t.CollectedAmount, new { @class = "form-control input-sm", @style = "width:150px;" })
+                                    @Html.ValidationMessageFor(t => t.CollectedAmount, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CollectionDate, new { @class = "control-label" })<br />
+                                    <div class="input-group date" style="width:90%;">
+                                        @Html.TextBox("CollectionDate", Model.CollectionDate.ToShortDateString(),
+                                        new
+                                        {
+                                            @readonly = "true",
+                                            @class = "form-control input-sm",
+                                            @data_provide = "datepicker",
+                                            @data_date_autoclose = "true",
+                                            @data_date_format = "mm/dd/yyyy",
+                                            @style = "cursor:pointer"
+
+                                        })
+                                        <div class="input-group-addon">
+                                            <span class="fa fa-fw fa-calendar"></span>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(t => t.CollectionDate, null, new { @class = "text-danger" })
+
+                                </div>    
+                                <div class="form-group">
+                                    @Html.Label("", new { @class = "control-label" })<br />
+                                    <button type="submit" class="btn btn-sm btn-primary" id="btnSubmit">
+                                        <i class="fa fa-fw fa-save"></i> Save Collection Info
+                                    </button>
+                                </div>
+                                
+                            </div>
+                        }
+                        
+                            <div class="col-lg-12" style="padding-bottom:10px;">
+                            
+                            <table class="table table-condensed table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Collection Date</th>
+                                        <th>Collected Amount</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    @foreach (var prow in sc.Details)
+                                    {
+                                        foreach(var row in prow.Collections)
+                                        {
+                                            <tr>
+                                                <td>@Html.DisplayFor(m => row.CollectionDate)</td>
+                                                <td>@Html.DisplayFor(m=>row.CollectedAmount)</td>
+                                                <td>
+                                                    <a href="@Url.Content("~/Contract/EditCollection?ID=" + row.ServiceContractCollectionID)" title="Edit"><i class="fa fa-fw fa-pencil"></i></a>
+                                                </td>
+                                            </tr>    
+                                        }
+                                        
+                                    }
+                                </tbody>
+                            </table>
+                        </div>    
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>    
+        
+    </div>
+    <div class="col-lg-3">
+        <h3 style="color:royalblue;"><i class="fa fa-fw fa-file"></i> Service Contract Info</h3>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <table class="table table-condensed table-striped">
+                    <tbody>
+                        
+                        <tr>
+                            <td class="col-lg-4"><label>Customer Name</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => sc.Customer.Name)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Start Date</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => sc.ContractStartDate)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>End Date</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => sc.ContractEndDate)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Billing Cycle</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => sc.BillingCycle)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Contract Amount</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">
+                            @if(sp!=null)
+                            {
+                                @Html.DisplayFor(m => sp.ContractAmount)    
+                            }
+                            
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Revision</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => sc.RevisionNo)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Status</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => sc.Status)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Attachment</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">
+                            @if (File.Exists(Server.MapPath("~/Upload/Attachment/" + (sc.AttachmentURL ?? ""))))
+                                {
+                                    <a target="_blank" href="@Url.Content("~/Upload/Attachment/"+sc.AttachmentURL)" title="Attachment"><i class="fa fa-fw fa-file-pdf-o"></i></a>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <p style="text-align:center">
+            <br />
+            <a href="@Url.Content("~/Contract/ServiceContracts")" class="btn btn-lg btn-success">
+                <i class="fa fa-fw fa-backward"></i> Back to List
+            </a>
+        </p>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    
+    <script type="text/javascript">
+        
+        $("#ServiceProductID").change(
+            function () {
+                var SPID = $("#ServiceProductID").val();
+                
+                location.href = "/Contract/ManageCollection?SCID=" + @sc.ServiceContractID + "&SPID=" + SPID;
+            }
+        );
+    </script>
+}
+
+

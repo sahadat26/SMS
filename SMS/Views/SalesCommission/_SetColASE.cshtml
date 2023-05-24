@@ -1,0 +1,101 @@
+﻿@model SMS.Models.VMColASE
+<div id="DialogCategory" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" style="width:400px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    <i class="fa fa-fw fa-user" style="color:#0094ff"></i> Set Collector ASE
+                </h4>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("SetColASE", "SalesCommission", new AjaxOptions { HttpMethod = "POST", OnBegin = "StartEvent", OnSuccess = "SuccessEvent" }, new { @class = "form-horizontal", @autocomplete = "off" }))
+                {
+                    @Html.HiddenFor(m=>m.ID)
+                    <div class="col-lg-12">
+                        
+                        <div class="col-lg-12">
+                            
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.CustomerName, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.CustomerName, new { @class = "form-control", @readonly = "on" })
+                            </div>
+                            
+                        </div>
+                        
+                        
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.DocNo, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.DocNo, new { @class = "form-control", @readonly = "on" })
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.FY, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.FY, new { @class = "form-control", @readonly = "on" })
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                               @Html.LabelFor(m => m.Amount, new { @class = "control-label" })
+                               @Html.TextBoxFor(t => t.Amount, new { @class = "form-control", @readonly = "on" })
+                            </div>
+                        </div>
+                       
+                        
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ASEUID, new { @class = "control-label" })
+                            @Html.DropDownListFor(t => t.ASEUID,ViewBag.ASE as SelectList,string.Empty, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(t => t.ASEUID, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-12">
+                        <p style="text-align:center;">
+                            <button id="btnSubmit" type="submit" class="btn btn-primary" data-loading-text="Saving...">
+                                <i class="fa fa-fw fa-save"></i> Update
+                            </button>
+                        </p>
+                        
+                    </div>
+                    
+                }
+                
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" id="btnClose" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-fw fa-times-circle"></i>  Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/bundles/jqueryval")
+
+<script type="text/javascript">
+    
+    function StartEvent()
+    {
+        $("#btnSubmit").button('loading');
+    }
+    
+    function SuccessEvent(response)
+    {
+        $("#btnSubmit").button('reset');
+        alert(response.msg);
+        if(response.flag=="y")
+        {
+            location.reload();
+        }
+        
+    }
+
+    
+</script>

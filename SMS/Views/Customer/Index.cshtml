@@ -1,0 +1,106 @@
+﻿@model IEnumerable<SMS.Models.Customer>
+@{
+    ViewBag.Title = "List of Customers";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 style="color:royalblue;">
+                <i class="fa fa-fw fa-users"></i> List of Customers&nbsp;&nbsp;
+                <a href="@Url.Content("~/Customer/Create/")" class="btn btn-sm btn-primary" title="Create New Customer">
+                    <i class="fa fa-fw fa-plus-circle"></i>
+                    Create New Customer
+                </a>
+
+                <form action="/Customer/Index" class="form-inline" style="float:right;">
+
+                    <span style="display:inline-block;">
+                        @Html.TextBox("q", ViewBag.SearchText as string, new { @class = "form-control input-sm", @placeholder = "Search Keyword" })
+                    </span>
+
+                    <span style="display:inline-block;">
+                        <button type="submit" class="btn btn-sm btn-success" id="btnSearch">
+                            <i class="fa fa-fw fa-search"></i>Search
+                        </button>
+                    </span>
+                    @if (ViewBag.SearchText != null)
+                {
+                        <span style="display:inline-block;">
+
+                            <a title="Clear Search" href="@Url.Content("~/Customer/Index")"><i style="color:red;" class="fa fa-fw fa-times"></i></a>
+                        </span>
+                        <span style="display:inline-block;">
+                            Total Result Found @Model.Count()
+                        </span>
+                }
+                </form>
+            </h3>
+            @*<div class="panel panel-primary">
+                <div class="panel-body">*@
+            @{
+
+                if (ViewBag.Info != null)
+                {
+                    <!-- Message OK -->
+                    <div class="alert alert-info">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>@ViewBag.Info</strong>
+                    </div>
+		            <!-- End Message OK -->
+                }
+                else if (ViewBag.Error != null)
+                {
+		            <!-- Message Error -->
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <p><strong>@ViewBag.Error</strong></p>
+                    </div>
+		            <!-- End Message Error -->
+                }
+            }
+            @using GridMvc.Html
+
+            @Html.Grid(Model).Columns(
+col =>
+{
+    col.Add(i => i.CustomerID).Titled("ID").Sortable(true);
+    col.Add(i => i.Name).Titled("Customer Name").Filterable(true).Sortable(true);
+    col.Add(i => i.OfficePhone).Titled("Office Phone").Filterable(true).Sortable(true);
+    col.Add(i => i.Address).Titled("Address").Filterable(true).Sortable(true);
+    col.Add(i => i.ContactPerson).Titled("Contact Person").Filterable(true).Sortable(true);
+    col.Add(i => i.JobTitle).Titled("Designation").Filterable(true).Sortable(true);
+    col.Add(i => i.Email).Titled("Email").Filterable(true).Sortable(true);
+    col.Add(i => i.Mobile).Titled("Mobile").Filterable(true).Sortable(true);
+    
+
+    col.Add().Titled("Extra Contact").Filterable(true).Sortable(true).Sanitized(false).Encoded(false)
+        .RenderValueAs(m =>
+            @<text>
+                @m.Contacts.Count
+            </text>
+        );
+    col.Add().Titled("Action").Encoded(false).Sanitized(false).RenderValueAs(m =>
+        @<text>
+            <a href="@Url.Content("~/Customer/Edit?CID=" + m.CustomerID)" title="Edit"><i class="fa fa-fw fa-pencil"></i></a>
+            <a href="@Url.Content("~/Customer/ManageContact?CID=" + m.CustomerID)" title="Manage Contact"><i class="fa fa-fw fa-user"></i></a>
+        </text>
+        );
+}
+   ).WithPaging(15, 20)
+
+        </div>
+    </div>
+</div>
+@*</div>
+    </div>*@
+@section scripts
+{
+
+    @Scripts.Render("~/bundles/gridmvc")
+
+}
+
+
+

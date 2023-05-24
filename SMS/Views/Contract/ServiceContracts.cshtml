@@ -1,0 +1,160 @@
+﻿@model IEnumerable<SMS.Models.ServiceContract>
+@{
+    ViewBag.Title = " List of Service Contract";
+    bool ChkVal = (ViewBag.Chk as bool?).Value;
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 style="color:royalblue;">
+                <i class="fa fa-fw fa-gavel"></i> Service Contracts&nbsp;&nbsp;
+                <a href="@Url.Content("~/Contract/CreateSC")" class="btn btn-sm btn-primary" title="New Service Contract">
+                    <i class="fa fa-fw fa-plus-circle"></i>
+                    New Service Contract
+                </a>
+
+                <form action="/Contract/ServiceContracts" class="form-inline" style="float:right;">
+                    
+                    <div class="form-group">
+                        @Html.CheckBox("WithDate", ChkVal)
+                    </div>
+                    <div class="input-group date">
+                        @Html.TextBox("Start", ViewBag.StartDate as string,
+                                    new
+                                    {
+                                        @readonly = "true",
+                                        @class = "form-control input-sm",
+                                        @data_provide = "datepicker",
+                                        @data_date_autoclose = "true",
+                                        @style = "cursor:pointer;"
+                                    })
+                        <div class="input-group-addon">
+                            <span class="fa fa-fw fa-calendar"></span>
+                        </div>
+                    </div>
+                    <div class="input-group date">
+                        @Html.TextBox("End", ViewBag.EndDate as string,
+                                    new
+                                    {
+                                        @readonly = "true",
+                                        @class = "form-control input-sm",
+                                        @data_provide = "datepicker",
+                                        @data_date_autoclose = "true",
+                                        @style = "cursor:pointer;"
+                                    })
+                        <div class="input-group-addon">
+                            <span class="fa fa-fw fa-calendar"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <input type="text" id="q" name="q" class="form-control input-sm"
+                               placeholder="Search Keywords" value="@ViewBag.Keywords" />
+                        <button id="btnSearch" type="submit" class="btn btn-sm btn-success">
+                            <i class="fa fa-fw fa-search"></i> Search
+                        </button>
+
+                        @if (ViewBag.Keywords != "")
+                        {
+                            <span style="display:inline-block;">
+                                <i style="color:red;" class="fa fa-fw fa-times"></i>
+                                <a title="Clear Search" href="@Url.Content("~/Contract/ServiceContracts")">Clear Search</a>
+                            </span>
+                        }
+                    </div>
+                </form>
+            </h3>
+
+            @*<div class="panel panel-primary">
+                <div class="panel-body">*@
+            @{
+
+                if (ViewBag.Info != null)
+                {
+                    <!-- Message OK -->
+                    <div class="alert alert-info">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>@ViewBag.Info</strong>
+                    </div>
+		            <!-- End Message OK -->
+                }
+                else if (ViewBag.Error != null)
+                {
+		            <!-- Message Error -->
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <p><strong>@ViewBag.Error</strong></p>
+                    </div>
+		            <!-- End Message Error -->
+                }
+            }
+
+            @using GridMvc.Html
+
+            @Html.Grid(Model).Columns(
+col =>
+{
+    col.Add(i => i.ServiceContractID).Titled("ID").Sortable(true).Filterable(true);
+    col.Add(i => i.Customer.Name).Titled("Customer Name").Filterable(true).Sortable(true);
+    col.Add(i => i.ContractStartDate).Titled("Start Date").Filterable(true).Sortable(true).Format("{0:dd MMM, yyyy}");
+    col.Add(i => i.ContractEndDate).Titled("End Date").Filterable(true).Sortable(true).Format("{0:dd MMM, yyyy}");
+    col.Add(i => i.TotalContractAmount).Titled("Contract Amount").Filterable(true).Sortable(true).Format("{0:0,0}");
+    col.Add().Titled("Collected Amount").Encoded(false).Sanitized(false).RenderValueAs(m=>
+        @<text>
+            <span>@m.TotalCollectedAmount(null,null).ToString("N0")</span>
+        </text>
+        );
+    col.Add(i => i.BillingCycle).Titled("Billing Cycle").Filterable(true).Sortable(true);
+    col.Add(i => i.Products).Titled("Products").Filterable(true).Sortable(true);
+    col.Add(i => i.RevisionNo).Titled("Rev").Filterable(true).Sortable(true);
+    col.Add(i => i.Status).Titled("Status").Filterable(true).Sortable(true);
+    col.Add().Titled("Action").Encoded(false).Sanitized(false).RenderValueAs(m =>
+        @<text>
+           @if(m.Status==SMS.Models.EStatus.Open)
+           {
+                <a href="@Url.Content("~/Contract/ManageSP?SCID=" + m.ServiceContractID)" title="Manage Products">@m.Details.Count</a>
+                <a href="@Url.Content("~/Contract/ManageCollection?SCID=" + m.ServiceContractID)" title="Manage Collection"><i class="fa fa-fw fa-money"></i></a>
+                <a href="@Url.Content("~/Contract/EditSC?SCID=" + m.ServiceContractID)" title="Edit"><i class="fa fa-fw fa-pencil"></i></a>
+                
+           }
+            @if (File.Exists(Server.MapPath("~/Upload/Attachment/" + (m.AttachmentURL ?? ""))))
+            {
+            <a target="_blank" href="@Url.Content("~/Upload/Attachment/"+m.AttachmentURL)" title="Attachment"><i class="fa fa-fw fa-file-pdf-o"></i></a>
+            }   
+            <a href="#" onclick="RenewContract(@m.ServiceContractID)" title="Renew Contract"><i class="fa fa-fw fa-repeat"></i></a>    
+        </text>
+        );
+}
+).WithPaging(15, 20).SetRowCssClasses(m => m.Status == SMS.Models.EStatus.Close ? "rowclose" : string.Empty)
+@Html.Partial("_ModalDialog")
+        </div>
+    </div>
+</div>
+@*</div>
+    </div>*@
+@section scripts
+{
+    @Scripts.Render("~/bundles/gridmvc")
+    @Scripts.Render("~/bundles/ajax")
+    <script type="text/javascript">
+        function RenewContract(SCID) {
+            $.ajax(
+                {
+                    type: 'GET',
+                    url: '/Contract/RenewContract/',
+                    data: { 'SCID': SCID },
+                    datatype: 'html',
+                    success: function (result) {
+                        $(".modal-body").html(result);
+                        $("#DivDialog").modal();
+                    }
+                }
+                );
+        }
+    </script>
+}
+
+
+

@@ -1,0 +1,233 @@
+﻿@model IEnumerable<SMS.Models.SC_Collection>
+@{
+    ViewBag.Title = " List of Collections";
+}
+
+@using SMS.Models;
+@{
+    UserInfo UI = new SMS.Models.UserInfo();
+    if (Request.IsAuthenticated)
+    {
+        UI = UserInfo.GetUserInfo(User.Identity.Name);
+
+    }
+}
+
+
+
+@Styles.Render("~/Content/Kendo/css")
+<div class="container-fluid">
+
+    <div class="row">
+        <div id="divColASE"></div>
+        <div class="col-lg-12">
+            <h3 style="color:royalblue;">
+                <i class="fa fa-fw fa-money"></i> All Collections&nbsp;&nbsp;
+                
+
+                <form action="/SalesCommission/IndexCollections" class="form-inline" style="float:right;" id="frm">
+
+                    
+                    <div class="form-group">
+                        @(Html.Kendo().DatePicker().Name("Start")
+                        .Value(ViewBag.StartDate as string).Format("MM/dd/yyyy")
+                                        .HtmlAttributes(new { @class = "form-control", 
+                                            @type = "text", @style = "width:140px;" }))
+                    </div>
+                    <div class="form-group">
+                        @(Html.Kendo().DatePicker().Name("End")
+                        .Value(ViewBag.EndDate as string).Format("MM/dd/yyyy")
+                                        .HtmlAttributes(new { @class = "form-control", @type = "text", @style = "width:140px;" }))
+                    </div>
+                    <div class="form-group">
+
+                        <input type="text" id="q" name="q" class="form-control input-sm"
+                               placeholder="Search Keywords" value="@ViewBag.SearchText" />
+                        <button id="btnSearch" type="submit" class="btn btn-sm btn-success">
+                            <i class="fa fa-fw fa-search"></i> Search
+                        </button>
+
+                        @if (ViewBag.SearchText!=null)
+                        {
+                            <span style="display:inline-block;">
+                                <i style="color:red;" class="fa fa-fw fa-times"></i>
+                                <a title="Clear Search" href="@Url.Content("~/SalesCommission/IndexCollections")">Clear Search(@Model.Count())</a>
+                            </span>
+                        }
+                        <button data-loading-text="Syncing......." type="button" class="btn btn-sm btn-warning" id="btnSync">
+                            <i class="fa fa-fw fa-refresh"></i>Sync Collection
+                        </button>
+                    </div>
+                </form>
+            </h3>
+
+            @*<div class="panel panel-primary">
+                <div class="panel-body">*@
+            @{
+
+                if (ViewBag.Info != null)
+                {
+                    <!-- Message OK -->
+                    <div class="alert alert-info">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>@ViewBag.Info</strong>
+                    </div>
+		            <!-- End Message OK -->
+                }
+                else if (ViewBag.Error != null)
+                {
+		            <!-- Message Error -->
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <p><strong>@ViewBag.Error</strong></p>
+                    </div>
+		            <!-- End Message Error -->
+                }
+            }
+
+            @using GridMvc.Html
+
+            @Html.Grid(Model).Columns(
+col =>
+{
+    col.Add(i => i.PAYMENT_DOC).Titled("Payment Doc").Sortable(true).Filterable(true);
+    col.Add(i => i.FISCAL_YEAR).Titled("FY").Sortable(true).Filterable(true);
+    col.Add(i => i.CustomerDisplay).Titled("Customer Name").Filterable(true).Sortable(true);
+    col.Add(i => i.PAYMENT_DATE).Titled("Payment Date").Filterable(true).Sortable(true).Format("{0:dd MMM, yyyy}");
+    col.Add(i => i.AMOUNT).Titled("Amount").Filterable(true).Sortable(true).Format("{0:0,0}");
+    col.Add(i => i.INVOICE_DOC).Titled("Invoice No").Filterable(true).Sortable(true);
+    col.Add(i => i.SALE_TYPE).Titled("Sale Type").Filterable(true).Sortable(true);
+    col.Add().Titled("Last Pmt").Encoded(false).Sanitized(false).RenderValueAs(m =>
+        @<text>
+            @if(m.PMT_TYPE=="Part")
+            {
+                if(m.IsLastPayment)
+                {
+                    <a href="#" title="Last Payment Update" onclick="SetLastPayment(@m.ID)">Yes</a>
+                }
+                else
+                {
+                    <a href="#" title="Last Payment Update" onclick="SetLastPayment(@m.ID)">No</a>
+                }
+
+            }
+            
+        </text>
+        );
+        col.Add().Titled("Collector ASE").Encoded(false).Sanitized(false).RenderValueAs(m =>
+        @<text>
+            @if(m.SALE_TYPE=="SERVICE"||m.DOC_TYPE=="DA")
+            {
+                if(m.status==1 || m.status==2 || m.status==3)
+                {
+                    if(m.status==1)
+                    {
+                        <a>Approved By Suppervisor  </a>
+                    }
+                    else if(m.status==2)
+                    {
+                        <a>Approved By Product Manager  </a>
+                    }
+                    else if(m.status==3)
+                    {
+                        <a>Approved By HOD </a>
+                    }
+                         
+                }
+                else
+                {
+                     if(m.ASEUID!=0)
+                        {
+                            if(m.assignDisplayName!=null)
+                            {
+                                if(m.assignBy==UI.User.UserID)
+                                {
+                                    <a href="#" title="Set Collector ASE" onclick="SetColASE(@m.ID)">@m.ASE.DisplayText </a> <span></span>
+                                }
+                                else
+                                {
+                                     <a href="#" title="Set Collector ASE" >@m.ASE.DisplayText </a> <span> </span>
+                                }
+                                
+                            }
+                            else
+                            {
+                                <a href="#" title="Set Collector ASE" onclick="SetColASE(@m.ID)">@m.ASE.DisplayText </a>
+                            }
+                        }
+                        else
+                        {
+                            <a href="#" title="Set Collector ASE" onclick="SetColASE(@m.ID)">Not Assigned</a>
+                        }
+                }
+               
+
+            }
+            
+        </text>
+
+
+
+
+        );
+        col.Add(i => i.assignDisplayName).Titled("Assign By").Filterable(true).Sortable(true);
+    
+}
+).WithPaging(15, 20)
+            
+        </div>
+    </div>
+</div>
+@*</div>
+    </div>*@
+@section scripts
+{
+    @Scripts.Render("~/bundles/gridmvc")
+    @Scripts.Render("~/bundles/ajax")
+    @Scripts.Render("~/bundles/Kendo")
+    <script type="text/javascript">
+        $("#btnSync").click(function () {
+            $("#btnSync").button('loading');
+            $("#frm").prop("action", "/SalesCommission/SyncCollections");
+            $("#frm").submit();
+        });
+
+        function SetLastPayment(ID)
+        {
+            var conf = confirm("Are sure to change Status?");
+            if (conf) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/SalesCommission/SetLastPayment',
+                    data: { 'ID':ID },
+                    success: function (result) {
+                        if (result.flag == 'y') {
+                            alert(result.msg);
+                            location.reload();
+                        }
+                        else {
+                            alert(result.msg);
+                        }
+                    }
+                });
+            }
+        }
+        function SetColASE(ID) {
+            $.ajax(
+             {
+                 type: 'GET',
+                 data: { 'ID': ID },
+                 url: '/SalesCommission/SetColASE',
+                 datatype: 'html',
+                 success: function (result) {
+                     $("#divColASE").html(result);
+                     $("#DialogCategory").modal();
+                 }
+             }
+             );
+        }
+    </script>
+}
+
+
+

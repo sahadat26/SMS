@@ -1,0 +1,115 @@
+﻿@model SMS.Models.VMCont
+
+@using (Ajax.BeginForm("SaveCont", "SalesCommission", new AjaxOptions { UpdateTargetId = "divCont", HttpMethod = "POST", OnSuccess = "ClearContInput" }, new { @role = "form" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(m => m.Cont.SL)
+    @Html.HiddenFor(m => m.Cont.Invoice_Doc)
+    @Html.HiddenFor(m => m.Cont.ID)
+    @Html.HiddenFor(m => m.Cont.SpareAmount)
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            ASE Contribution
+        </div>
+
+        <div class="panel-body">
+            @if (ViewBag.ContError != null)
+            {
+                <div class="alert alert-danger">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <p><strong>@ViewBag.ContError</strong></p>
+                </div>
+            }
+            <div class="col-lg-12">
+
+                <div class="form-group col-lg-6">
+                    @Html.LabelFor(m => m.Cont.ASEID, new { @class = "control-label" }) &nbsp;<span style="color:red;">*</span>
+                    @Html.DropDownListFor(m => m.Cont.ASEID,ViewBag.ASE as SelectList,string.Empty, new { @class = "form-control input-sm" })
+                    @Html.ValidationMessageFor(t => t.Cont.ASEID, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-lg-2">
+                    @Html.LabelFor(m => m.Cont.ContrPerc, new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.Cont.ContrPerc, new { @class = "form-control input-sm" })
+                    @Html.ValidationMessageFor(t => t.Cont.ContrPerc, null, new { @class = "text-danger" })
+                </div>
+                
+                <div class="form-group col-lg-4">
+                    @Html.LabelFor(m => m.Cont.ContrAmount, new { @class = "control-label" }) &nbsp;<span style="color:red;">*</span>
+                    @Html.TextBoxFor(m => m.Cont.ContrAmount, new { @class = "form-control input-sm" })
+                    @Html.ValidationMessageFor(t => t.Cont.ContrAmount, null, new { @class = "text-danger" })
+                    
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <p style="text-align:center">
+                    <input type="submit" value="Add/Update" class="btn btn-success btn-sm" />
+                </p>
+            </div>
+
+            <div class="col-lg-12">
+
+                <table class="table table-condensed table-responsive">
+                    <thead>
+                        <tr>
+                            <th>
+                                Sl
+                            </th>
+                            <th>
+                                ASE Name
+                            </th>
+                            <th>
+                                Percent(%)
+                            </th>
+                            <th>
+                                Amount
+                            </th>
+                            
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 0;
+                            string ClassName = "";
+                        }
+                        @foreach (var item in Model.Conts.OrderBy(d => d.SL))
+                        {
+                            if ((i % 2) == 0)
+                            {
+                                ClassName = "even";
+                            }
+                            else
+                            {
+                                ClassName = "odd";
+                            }
+                            <tr class="@ClassName" id="@("rowCont" + item.SL)">
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SL)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ASE.DisplayText)
+                                </td>
+                                <td>
+                                    @item.DisConrPerc.ToString("N2")
+                                </td>
+                                <td>
+                                    @item.ContrAmount.ToString("N2")
+                                </td>
+                                
+                                <td>
+                                    @Ajax.ActionLink("Edit", "EditCont", "SalesCommission", new { Index = item.SL }, new AjaxOptions { UpdateTargetId = "divCont", OnComplete = "ColorRowCont(" + item.SL + ")" }, new { @class = "link-button" })
+                                    |
+                                    @Ajax.ActionLink("Delete", "DeleteCont", "SalesCommission", new { Index = item.SL }, new AjaxOptions { UpdateTargetId = "divCont" }, new { @class = "link-button" })
+                                </td>
+                            </tr>
+                            i++;
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+}
+
+

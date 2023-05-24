@@ -1,0 +1,169 @@
+﻿@model SMS.Models.Contact
+
+@{
+    ViewBag.Title = "Manage Contacts";
+    var customer = ViewBag.Cus as SMS.Models.Customer;
+}
+
+<div class="container-fluid">
+    <div class="col-lg-8">
+        
+        <div class="row">
+                <div class="col-lg-12">
+                    <h3 style="color:royalblue;"><i class="fa fa-fw fa-user"></i> Manage Extra Contact</h3>
+                    <div class="panel panel-primary">
+
+                        <div class="panel-body">
+                            <br />
+                            @{
+
+            if (ViewBag.Info != null)
+            {
+                    <!-- Message OK -->
+                                <div class="alert alert-info">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                    <strong>@ViewBag.Info</strong>
+                                </div>
+		            <!-- End Message OK -->
+            }
+            else if (ViewBag.Error != null)
+            {
+		            <!-- Message Error -->
+                                <div class="alert alert-danger">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                    <p><strong>@ViewBag.Error</strong></p>
+                                </div>
+		            <!-- End Message Error -->
+            }
+                            }
+                            @using (Html.BeginForm("SaveContact", "Customer", FormMethod.Post, new { @class = "form-inline", @autocomplete = "off" }))
+                            {
+                                @Html.HiddenFor(m => m.CustomerID)
+                                @Html.HiddenFor(m=>m.ContactID)
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(t => t.ContactPerson, new { @class = "form-control",@placeholder="Contact Person" })
+                                        @Html.ValidationMessageFor(t => t.ContactPerson, null, new { @class = "text-danger" })
+                                    </div>
+
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(t => t.JobTitle, new { @class = "form-control", @placeholder = "Job Title" })
+                                        @Html.ValidationMessageFor(t => t.JobTitle, null, new { @class = "text-danger" })
+                                    </div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(t => t.Email, new { @class = "form-control", @placeholder = "Email" })
+                                        @Html.ValidationMessageFor(t => t.Email, null, new { @class = "text-danger" })
+                                    </div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(t => t.Mobile, new { @class = "form-control", @placeholder = "Mobile" })
+                                        @Html.ValidationMessageFor(t => t.Mobile, null, new { @class = "text-danger" })
+                                    </div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(t => t.Address, new { @class = "form-control", @placeholder = "Address" })
+                                        @Html.ValidationMessageFor(t => t.Address, null, new { @class = "text-danger" })
+                                    </div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="submit" class="btn btn-sm btn-primary" id="btnSubmit">
+                                        <i class="fa fa-fw fa-save"></i> Save
+                                    </button>
+                                </div>
+                            }
+                            <hr />
+                            <table class="table table-condensed table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Contact Person</th>
+                                        <th>Job Title</th>
+                                        <th>Email</th>
+                                        <th>Mobile</th>
+                                        <th>Address</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var row in customer.Contacts)
+                                    {
+                                        <tr>
+                                            <td>@row.ContactPerson</td>
+                                            <td>@row.JobTitle</td>
+                                            <td>@row.Email</td>
+                                            <td>@row.Mobile</td>
+                                            <td>@row.Address</td>
+                                            <td>
+                                                <a href="@Url.Content("~/Customer/EditContact?ID=" + row.ContactID)" title="Edit"><i class="fa fa-fw fa-pencil"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+    </div>
+    <div class="col-lg-4">
+        <h3 style="color:royalblue;"><i class="fa fa-fw fa-users"></i> Customer Info</h3>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <table class="table table-condensed table-striped">
+                    <tbody>
+                        <tr>
+                            <td class="col-lg-4"><label>Customer Name</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@customer.Name</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Office Phone</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@customer.OfficePhone</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Address</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@customer.Address</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Contact Name</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@customer.ContactPerson</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Job Title</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@customer.JobTitle</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Mobile</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@customer.Mobile</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Email</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@customer.Email</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12" style="text-align:center;">
+        <a href="@Url.Content("~/Customer/Index")" class="btn btn-lg btn-success">
+            <i class="fa fa-fw fa-backward"></i> Back to List
+        </a>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    
+    
+}
+
+

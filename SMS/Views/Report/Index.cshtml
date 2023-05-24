@@ -1,0 +1,293 @@
+﻿@model SMS.Models.ReportParameter
+@{
+    ViewBag.Title = "Report";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <i class="fa fa-fw fa-filter"></i> Report Parameter
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    
+                    @{
+
+                        if (ViewBag.Info != null)
+                        {
+                    <!-- Message OK -->
+                            <div class="alert alert-info">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <strong>@ViewBag.Info</strong>
+                            </div>
+		            <!-- End Message OK -->
+                        }
+                        else if (ViewBag.Error != null)
+                        {
+		            <!-- Message Error -->
+                            <div class="alert alert-danger">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <p><strong>@ViewBag.Error</strong></p>
+                            </div>
+		            <!-- End Message Error -->
+                        }
+                    }
+                    <form action="/Report/PreviewReport" method="post" class="form-inline" id="frm">
+                        @Html.HiddenFor(m=>m.ReportID)
+                        <div class="form-group">
+                            
+                            <div class="input-group date">
+                                @Html.TextBox("Start", Model.Start.ToString("MM/dd/yyyy"),
+                                    new
+                                    {
+                                        @readonly = "true",
+                                        @class = "form-control input-sm",
+                                        @data_provide = "datepicker",
+                                        @data_date_autoclose = "true",
+                                        @style = "cursor:pointer;"
+                                    })
+                                <div class="input-group-addon">
+                                    <span class="fa fa-fw fa-calendar"></span>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="form-group">
+                            <div class="input-group date">
+                                @Html.TextBox("End", Model.End.ToString("MM/dd/yyyy"),
+                                    new
+                                    {
+                                        @readonly = "true",
+                                        @class = "form-control input-sm",
+                                        @data_provide = "datepicker",
+                                        @data_date_autoclose = "true",
+                                        @style = "cursor:pointer;"
+                                    })
+                                <div class="input-group-addon">
+                                    <span class="fa fa-fw fa-calendar"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.DropDownListFor(t => t.EmployeeID, ViewBag.Employees as SelectList, "Select Employee", new { @class = "form-control input-sm", @style = "width:200px" })
+                            @Html.ValidationMessageFor(t => t.EmployeeID, null, new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.DropDownListFor(t => t.CustomerID, ViewBag.Customers as SelectList, "Select Customer", new { @class = "form-control input-sm",@style="width:200px" })
+                            @Html.ValidationMessageFor(t => t.CustomerID, null, new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.DropDownListFor(t => t.ProductID, ViewBag.Products as SelectList, "Select Product", new { @class = "form-control input-sm" })
+                            @Html.ValidationMessageFor(t => t.ProductID, null, new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.DropDownListFor(t => t.PropertyID, new List<SelectListItem>(), "Select Property", new { @class = "form-control input-sm" })
+                            @Html.ValidationMessageFor(t => t.PropertyID, null, new { @class = "text-danger" })
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Resource Performance</h3>
+                </div>
+                <div class="panel-body">
+                    <ul>
+                        <li>
+                            <a href="#" onclick="PreviewReport(1)">
+                                Individual Performance
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(2)">
+                                Team Performance
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(3)">
+                                Revenue Vs. Expense By Product
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(11)">
+                                Job Attend By Product Property
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(4)">
+                                Reveneue Vs. Expense By Revenue Wing
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Service and Warranty Contract</h3>
+                </div>
+                <div class="panel-body">
+                    <ul>
+                        <li>
+                            <a href="#" onclick="PreviewReport(5)">
+                                Top Service Contract Based on Profit
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(6)">
+                                Most Complained Warranty Product
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(7)">
+                                Top Service Contract Based on Loss
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(8)">
+                                Service Contract Close Within 30 Days
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(9)">
+                                Warranty Expire Within 30 Days
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Miscellanies</h3>
+                </div>
+                <div class="panel-body">
+                    <ul>
+                        <li>
+                            <a href="#" onclick="PreviewReport(10)">
+                                Job History By Service People
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(12)">
+                                Job History By Customer
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(13)">
+                                Job History in a Date Range
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank">
+                                
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/select2")
+    <script type="text/javascript">
+        $("#EmployeeID").select2();
+        $("#CustomerID").select2();
+        function PreviewReport(RID)
+        {
+            $("#ReportID").val(RID);
+            var flag = true;
+            switch(true)
+            {
+                case (RID>0&&RID<8):
+                    {
+                        if ($("#EmployeeID").val() == "")
+                        {
+                            flag = false;
+                            alert("No Employee Selected");
+                        }
+                        break;
+                    }
+                case (RID==10):
+                    {
+                        if ($("#EmployeeID").val() == "") {
+                            flag = false;
+                            alert("No Employee Selected");
+                        }
+                        break;
+                    }
+                case (RID==11):
+                    {
+                        if ($("#EmployeeID").val() == "") {
+                            flag = false;
+                            alert("No Employee Selected");
+                        }
+                        else if ($("#ProductID").val() == "") {
+                            flag = false;
+                            alert("No Product Selected");
+                        }
+                        else if ($("#PropertyID").val() == "") {
+                            flag = false;
+                            alert("No Property Selected");
+                        }
+                        break;
+                    }
+                case (RID==12):
+                    {
+                        if ($("#CustomerID").val() == "") {
+                            flag = false;
+                            alert("No Customer Selected");
+                        }
+                        
+                        break;
+                    }
+            }
+            if(flag)
+            {
+                $("#frm").prop("target", "_blank");
+                $("#frm").submit();
+            }
+        }
+        $("#ProductID").change(
+            function () {
+                var pid = $("#ProductID").val();
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/Report/OnChangeProduct',
+                        data: { 'PID': pid },
+                        datatype: 'json',
+                        success: function (result) {
+                            var C = $("#PropertyID");
+                            C.empty();
+                            C.append('<option value="">Select Property</option>');
+                            $.each(result, function (i, item) {
+                                C.append('<option value="' + item.ID + '">' +
+                                item.Name + '</option>');
+                            }
+                            );
+                            
+                        }
+                    }
+                    );
+            }
+        );
+    </script>
+}
+

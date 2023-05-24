@@ -1,0 +1,285 @@
+﻿@using SMS.Models 
+@{
+    UserInfo UI = new SMS.Models.UserInfo();
+    if (Request.IsAuthenticated)
+    {
+        UI = UserInfo.GetUserInfo(User.Identity.Name);
+    }
+}
+<style>
+    .form-css {
+        display: block;
+        padding: 15px;
+        position: relative;
+    }
+
+    .logo {
+        padding: 10px 0 0 10px;
+    }
+</style>
+
+<!-- Navigation -->
+<nav style="background-color:#204562;" class="navbar navbar-inverse navbar-fixed-top">
+
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#MainMenu">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <div class="logo img-responsive">
+            <h3 style="margin:0;color:#e7e7bb;"><img src="@Url.Content("~/Content/images/logo.png")" /> 
+            
+            @if(Request.IsAuthenticated&&UI.Module==EModule.Service_Management)
+            {
+                <span>@UI.BusinessUnit Service Management</span> 
+            }
+            else if (Request.IsAuthenticated && UI.Module == SMS.Models.EModule.ASE_Commission)
+            {
+                <span>@UI.BusinessUnit ASE Commission Management</span> 
+            }
+            else
+            {
+                <span>Service and ASE Commission Management</span> 
+            }
+              
+            </h3>
+
+        </div>
+    </div>
+    <!-- Top Menu Items -->
+    <ul class="nav navbar-right top-nav">
+
+        @if (Request.IsAuthenticated)
+        {
+            <li class="dropdown">
+                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "form-css" }))
+                {
+                    @Html.AntiForgeryToken()
+
+
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user" style="color:#e7e7bb"></i> @UI.User.FullName <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        <li>
+                            <a href="@Url.Content("~/Account/ChangePassword/")"><i class="fa fa-fw fa-key"></i> Change Password</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                        </li>
+                    </ul>
+                }
+            </li>
+        }
+        else
+        {
+            <li>
+                <a title="Log On" href="@Url.Content("~/Account/LogOn/")">
+                    <i class="fa fa-fw fa-sign-in" style="color:#e7e7bb"></i> Sign In
+                </a>
+            </li>
+
+        }
+
+    </ul>
+
+    <!-- /.navbar-collapse -->
+</nav>
+@if (Request.IsAuthenticated&&UI.Module==EModule.Service_Management)
+{
+    <div class="collapse navbar-collapse" id="MainMenu" style="background-color:#204562;">
+        <nav class="navbar" role="navigation" style="margin-bottom:0px;">
+            <ul class="nav nav-tabs" style="background-color:#204562;">
+                <li class="@(Request.Url.LocalPath.Contains("/Dashboard/Index")
+            || Request.Url.LocalPath.Equals("/")
+            ?"active":"")">
+                    <a href="@Url.Content("~/Dashboard/Index/")">
+                        <i class="fa fa-fw fa-dashboard"></i> Dashboard
+                    </a>
+                </li>
+
+                <li class="dropdown @(Request.Url.LocalPath.Contains("/Job")
+
+            ? "active" : "")">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                        <i class="fa fa-fw fa-tasks"></i> Query and Job
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="@Url.Content("~/Job/Queries")"><i class="fa fa-fw fa-question"></i> List of Queries</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="@Url.Content("~/Job/JobCards")"><i class="fa fa-fw fa-file-text"></i> Job In Progress</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Content("~/Job/JobCardArchive")"><i class="fa fa-fw fa-archive"></i> Complete Job Cards</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="@Url.Content("~/Job/CanceledQueries")"><i style="color:red;" class="fa fa-fw fa-times"></i> Canceled Queries</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="@(Request.Url.LocalPath.Contains("/SPService")?"active":"")">
+                    <a href="/SPService/Index/">
+                        <i class="fa fa-history"></i> Service History
+                    </a>
+                </li>
+                <li class="dropdown @(Request.Url.LocalPath.Contains("/Contract")?"active":"")">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                        <i class="fa fa-fw fa-exchange"></i> Contracts
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="@Url.Content("~/Contract/ServiceContracts")"><i class="fa fa-fw fa-gavel"></i> Service Contract List</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="@Url.Content("~/Contract/WarrantyContracts/")"><i class="fa fa-fw fa-check"></i> Warranty Contract List</a>
+                        </li>
+
+                    </ul>
+                </li>
+                <li class="@(Request.Url.LocalPath.Contains("/Customer")?"active":"")">
+                    <a href="/Customer/Index/">
+                        <i class="fa fa-fw fa-users"></i> Customer Info
+                    </a>
+                </li>
+                <li class="@(Request.Url.LocalPath.Contains("/Product/SAPProductList")?"active":"")">
+                    <a href="/Product/SAPProductList/">
+                        <i class="fa fa-fw fa-gears"></i> SAP Generators
+                    </a>
+                </li>
+                <li class="@(Request.Url.LocalPath.Contains("/Product/Index")?"active":"")">
+                    <a href="/Product/Index/">
+                        <i class="fa fa-fw fa-rub"></i> Manage Product
+                    </a>
+                </li>
+
+                <li class="dropdown @(Request.Url.LocalPath.Contains("/Account")
+            || Request.Url.LocalPath.Contains("/Permission")
+            ?"active":"")">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                        <i class="fa fa-fw fa-user"></i> Manage User
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="@Url.Content("~/Account/IndexD/")"><i class="fa fa-fw fa-sitemap"></i> List of Designation</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="@Url.Content("~/Account/Index/")"><i class="fa fa-fw fa-table"></i> List of Users</a>
+                        </li>
+
+                        @*<li>
+                                <a href="@Url.Content("~/Account/NotExist/")">
+                                    <i class="fa fa-fw fa-table"></i> Not Exist
+                                </a>
+                            </li>*@
+
+
+                    </ul>
+                </li>
+                <li class="@(Request.Url.LocalPath.Contains("/Report")?"active":"")">
+                    <a href="/Report/Index/">
+                        <i class="fa fa-fw fa-bar-chart-o"></i> Reports
+                    </a>
+                </li>
+            </ul>
+
+        </nav>
+    </div>
+
+}
+else if (Request.IsAuthenticated && UI.Module == EModule.ASE_Commission)
+{
+    <div class="collapse navbar-collapse" id="MainMenu" style="background-color:#204562;">
+        <nav class="navbar" role="navigation" style="margin-bottom:0px;">
+            <ul class="nav nav-tabs" style="background-color:#204562;">
+                <li class="@(Request.Url.LocalPath.Contains("/Dashboard/IndexCom")
+            || Request.Url.LocalPath.Equals("/")
+            ?"active":"")">
+                    <a href="@Url.Content("~/Dashboard/IndexCom/")">
+                        <i class="fa fa-fw fa-dashboard"></i> Dashboard
+                    </a>
+                </li>
+
+                
+                <li class="@(Request.Url.LocalPath.Contains("/SalesCommission/IndexSales")?"active":"")">
+                    <a href="@Url.Content("~/SalesCommission/IndexSales/")">
+                        <i class="fa fa-fw fa-shopping-cart"></i> All Sales
+                    </a>
+                </li>
+                <li class="@(Request.Url.LocalPath.Contains("/SalesCommission/IndexCollections")?"active":"")">
+                    <a href="@Url.Content("~/SalesCommission/IndexCollections/")">
+                        <i class="fa fa-fw fa-money"></i> All Collections
+                    </a>
+                </li>
+
+                <li class="dropdown @(Request.Url.LocalPath.Contains("/SalesCommission/ApprovedASECom") ? "active" : "")">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                        <i class="fa fa fa-check-circle"></i> ASE Commision Approval
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="@Url.Content("~/SalesCommission/ApprovedASECom/")"><i class="fa fa-check-circle-o"></i>&nbsp;Pending for Approval </a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Content("~/SalesCommission/ApprovedReport/")"><i class="fa fa-fw fa-bars"></i>&nbsp;List of Approved</a>
+                        </li>
+
+                    </ul>
+                </li>
+                
+                                
+                <li class="dropdown @(Request.Url.LocalPath.Contains("/Account")
+            || Request.Url.LocalPath.Contains("/Permission")
+            ||Request.Url.LocalPath.Contains("/ConditionMatrix")
+            ?"active":"")">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                        <i class="fa fa-fw fa-cog"></i> Administration
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        
+                        <li>
+                            <a href="@Url.Content("~/Account/Index/")"><i class="fa fa-fw fa-user"></i> List of Users</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Content("~/ConditionMatrix/Index/")"><i class="fa fa-fw fa-filter"></i> List of Conditions</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Content("~/ConditionMatrix/IndexAT/")"><i class="fa fa-fw fa-bars"></i> List of Targets</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Content("~/ConditionMatrix/Upload/")"><i class="fa fa-fw fa-upload"></i> Upload Targets</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Content("~/ConditionMatrix/SetCalender/")"><i class="fa fa-fw fa-calendar"></i> Setup Calendar</a>
+                        </li>
+
+                    </ul>
+                </li>
+                
+                <li class="@(Request.Url.LocalPath.Contains("/Report")?"active":"")">
+                    <a href="/Report/SC_Index/">
+                        <i class="fa fa-fw fa-bar-chart-o"></i> Reports
+                    </a>
+                </li>
+            </ul>
+
+        </nav>
+    </div>
+
+}
+
+

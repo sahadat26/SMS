@@ -1,0 +1,256 @@
+﻿@model SMS.Models.SPService
+@using SMS.Models
+@{
+    ViewBag.Title = "Update Service";
+}
+
+<div id="page-inner">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="page-head-line"><i class="fa fa-pencil"></i> Update Service</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <i class="fa fa-info"></i>
+                    Service Info
+                </div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("Edit", "SPService", FormMethod.Post, new { @role = "form", @autocomplete = "off", @id = "frmService" }))
+                    {
+                        <div class="col-lg-8">
+                            @{
+
+                        if (ViewBag.Info != null)
+                        {
+                    <!-- Message OK -->
+                                <div class="alert alert-info">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                    <strong>@ViewBag.Info</strong>
+                                </div>
+		            <!-- End Message OK -->
+                        }
+                        else if (ViewBag.Error != null)
+                        {
+		            <!-- Message Error -->
+                                <div class="alert alert-danger">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                    <p><strong>@ViewBag.Error</strong></p>
+                                </div>
+		            <!-- End Message Error -->
+                        }
+                            }
+                            @Html.Hidden("Obj.ID", Model.ID)
+                            @Html.Hidden("Obj.BU", Model.BU)
+                            @Html.Hidden("Obj.DocNo", Model.DocNo)
+                            @Html.Hidden("Obj.ItemNo", Model.ItemNo)
+                            @Html.Hidden("Obj.ServicePersonID", Model.ServicePersonID)
+                            @Html.Hidden("Obj.UserID", Model.UserID)
+                            @*<div class="col-lg-12">*@
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    @Html.Label("Customer Name", new { @class = "control-label" })
+                                    @Html.TextBoxFor(t => t.SAPProduct.CustomerDisplay, new { @class = "form-control input-sm", @readonly = "on" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Location", new { @class = "control-label" }) &nbsp;<span style="color:red;">*</span>
+                                    @Html.TextBoxFor(t => t.SAPProduct.Location, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Equipment Type", new { @class = "control-label" })
+                                    @Html.TextBoxFor(t => t.SAPProduct.PGC.Product.ProductName, new { @class = "form-control input-sm", @readonly = "on" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Equipment Brand", new { @class = "control-label" })
+                                    @Html.TextBoxFor(t => t.SAPProduct.PGC.Brand, new { @class = "form-control input-sm", @readonly = "on" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Engine Serial", new { @class = "control-label" })
+                                    @Html.TextBoxFor(t => t.SAPProduct.ENGINESERIAL, new { @class = "form-control input-sm", @readonly = "on" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Rating", new { @class = "control-label" })
+                                    @Html.TextBox("Obj.SAPProduct.Rating",Model.SAPProduct.Rating, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Date of Supply", new { @class = "control-label" })
+                                    @Html.TextBox("txtDeliveryDate", Model.SAPProduct.DELIVERYDATE.ToString("dd.MM.yyyy"), new { @class = "form-control input-sm", @readonly = "on" })
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    @Html.Label("Date of Commissioning", new { @class = "control-label" }) &nbsp;<span style="color:red;">*</span>
+                                    <div class="input-group date" style="width:90%;">
+                                        @Html.TextBox("Obj.SAPProduct.CommissioningDate", Model.SAPProduct.CommissioningDate.ToShortDateString(),
+                                                new
+                                                {
+                                                    @readonly = "true",
+                                                    @class = "form-control input-sm",
+                                                    @data_provide = "datepicker",
+                                                    @data_date_autoclose = "true",
+                                                    @data_date_format = "mm/dd/yyyy",
+                                                    @style = "cursor:pointer"
+
+                                                })
+                                        <div class="input-group-addon">
+                                            <span class="fa fa-fw fa-calendar"></span>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(t => t.JobCompletionDate, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Equipment Model", new { @class = "control-label" })
+                                    @Html.TextBox("Obj.SAPProduct.EQModel", Model.SAPProduct.EQModel, new { @class = "form-control input-sm" })
+                                    @Html.ValidationMessageFor(t => t.SAPProduct.EQModel, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Equipment Serial", new { @class = "control-label" })
+                                    @Html.TextBox("Obj.SAPProduct.EQSerial", Model.SAPProduct.EQSerial, new { @class = "form-control input-sm" })
+                                    @Html.ValidationMessageFor(t => t.SAPProduct.EQSerial, null, new { @class = "text-danger" })
+                                </div>
+                                @{
+                        var CustomerStatus = Enum.GetValues(typeof(EQueryType))
+                            .Cast<EQueryType>()
+                            //.Where(e => e != ETransportBy.Vendor)
+                       .Select(e => new SelectListItem
+                       {
+                           Value = ((int)e).ToString(),
+                           Text = e.ToString()
+                       });
+
+                        var JobCategory = Enum.GetValues(typeof(EJobCategory))
+                             .Cast<EJobCategory>()
+                            //.Where(e => e != ETransportBy.Vendor)
+                        .Select(e => new SelectListItem
+                        {
+                            Value = ((int)e).ToString(),
+                            Text = e.ToString()
+                        });
+
+                                }
+                                <div class="form-group">
+                                    @Html.Label("Customer Status", new { @class = "control-label" }) &nbsp;<span style="color:red;">*</span>
+                                    @Html.DropDownList("Obj.CustomerStatus", CustomerStatus, new { @class = "form-control input-sm" })
+                                    @*@Html.EnumDropDownListFor(m => m.CustomerStatus, new { @class = "form-control input-sm" })*@
+                                    @Html.ValidationMessageFor(t => t.CustomerStatus, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Job Category", new { @class = "control-label" }) &nbsp;<span style="color:red;">*</span>
+                                    @Html.DropDownList("Obj.JobCategory", JobCategory, new { @class = "form-control input-sm" })
+                                    @*@Html.EnumDropDownListFor(m => m.JobCategory, new {@class="form-control input-sm" })*@
+                                    @Html.ValidationMessageFor(t => t.JobCategory, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Job Completion Date", new { @class = "control-label" }) &nbsp;<span style="color:red;">*</span>
+                                    <div class="input-group date" style="width:90%;">
+                                        @Html.TextBox("Obj.JobCompletionDate", Model.JobCompletionDate.ToShortDateString(),
+                                                new
+                                                {
+                                                    @readonly = "true",
+                                                    @class = "form-control input-sm",
+                                                    @data_provide = "datepicker",
+                                                    @data_date_autoclose = "true",
+                                                    @data_date_format = "mm/dd/yyyy",
+                                                    @style = "cursor:pointer"
+
+                                                })
+                                        <div class="input-group-addon">
+                                            <span class="fa fa-fw fa-calendar"></span>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(t => t.JobCompletionDate, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Running Hour", new { @class = "control-label" }) &nbsp;<span style="color:red;">*</span>
+                                    @Html.TextBox("Obj.RunningHour", Model.RunningHour, new { @class = "form-control input-sm" })
+                                    @Html.ValidationMessageFor(t => t.RunningHour, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            @*</div>*@
+
+
+                        </div>
+                        <div class="col-lg-4">
+                            <table class="table table-bordered table-condensed table-responsive table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Sl</th>
+                                        <th>Work Name</th>
+
+                                        <th>Yes/No</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                        int i = 0;
+                                    }
+                                    @foreach (var item in Model.Details)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.Hidden("Obj.Details[" + i + "].ServiceID", item.ServiceID)
+                                                @Html.Hidden("Obj.Details[" + i + "].Sl", item.Sl)
+                                                @Html.DisplayFor(m => item.Sl)
+                                            </td>
+                                            <td>
+                                                @Html.Hidden("Obj.Details[" + i + "].WorkID", item.WorkID)
+                                                @Html.DisplayFor(m => item.ServiceWork.WorkName)
+                                                @if (item.ServiceWork.DetailRequired)
+                                                {
+                                                    @Html.TextBox("Obj.Details[" + i + "].ServiceDetail", item.ServiceDetail, new { @class = "form-control input-sm" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.Hidden("Obj.Details[" + i + "].ServiceDetail", item.ServiceDetail)
+                                                }
+                                            </td>
+                                            <td>
+
+                                                <input type="checkbox" class="checkbox-inline" name="@("Obj.Details[" + i + "].IsDone")"
+                                                       checked="@(item.IsDone)" />
+                                            </td>
+
+                                        </tr>
+                                                i++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    <div class="col-md-12">
+                        <p style="text-align:center;">
+                            <a href="@Url.Content("~/SPService/Index?q="+Model.SAPProduct.ENGINESERIAL)" title="Back to List" class="btn btn-info">
+                                <i class="fa fa-fw fa-history"></i> Service History
+                            </a>
+                            <button data-loading-text="Posting..........." type="button" class="btn btn-success" id="btnSubmit">
+                                <i class="fa fa-fw fa-save"></i> Update Service
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/select2")
+    @Scripts.Render("~/bundles/ajax")
+    <script type="text/javascript">
+        
+        $("#Obj_CustomerStatus").val(@((int)Model.CustomerStatus));
+        $("#Obj_JobCategory").val(@((int)Model.JobCategory));
+        $("#btnSubmit").click(
+            function () {
+                $("#btnSubmit").button('loading');
+                $("#frmService").submit();
+            }
+            );
+    </script>
+}
+

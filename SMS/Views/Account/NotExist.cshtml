@@ -1,0 +1,64 @@
+﻿@model IEnumerable<SMS.Models.User>
+@{
+    ViewBag.Title = "User Not Exist";
+}
+
+<div class="container-fluid">
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    <i class="fa fa-fw fa-users"></i>
+                    User Not Exist
+                </div>
+                <div class="panel-body">
+                    @{
+
+                        if (ViewBag.Info != null)
+                        {
+                    <!-- Message OK -->
+                            <div class="alert alert-info">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <strong>@ViewBag.Info</strong>
+                            </div>
+		            <!-- End Message OK -->
+                        }
+                        else if (ViewBag.Error != null)
+                        {
+		            <!-- Message Error -->
+                            <div class="alert alert-danger">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <p><strong>@ViewBag.Error</strong></p>
+                            </div>
+		            <!-- End Message Error -->
+                        }
+                    }
+                    @using GridMvc.Html
+
+                    @Html.Grid(Model).Columns(
+                    col =>
+                    {
+                        col.Add(i => i.UserName).Titled("Emp ID").Filterable(true).Sortable(true);
+                        col.Add(i => i.FullName).Titled("Full Name").Filterable(true).Sortable(true);
+                        col.Add(i => i.Email);
+                        
+                        col.Add().Titled("Action").Encoded(false).Sanitized(false).RenderValueAs(m =>
+                            @<text>
+                                <a href="@Url.Content("~/Account/Enable?ID="+m.UserID)" title="Enable"><i class="fa fa-fw fa-check"></i></a>
+
+                            </text>
+                                );
+                    }
+).WithPaging(15, 20)
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/gridmvc")
+}

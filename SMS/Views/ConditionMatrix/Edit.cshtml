@@ -1,0 +1,118 @@
+﻿@model SMS.Models.SC_ConditionMatrix
+
+@{
+    ViewBag.Title = "Update Condition";
+}
+
+<div class="container-fluid">
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 style="color:royalblue;"><i class="fa fa-fw fa-filter"></i> Update Condition</h3>
+            <div class="panel panel-primary">
+
+                <div class="panel-body">
+                    <br />
+                    @{
+
+                        if (ViewBag.Info != null)
+                        {
+                    <!-- Message OK -->
+                            <div class="alert alert-info">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <strong>@ViewBag.Info</strong>
+                            </div>
+		            <!-- End Message OK -->
+                        }
+                        else if (ViewBag.Error != null)
+                        {
+		            <!-- Message Error -->
+                            <div class="alert alert-danger">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <p><strong>@ViewBag.Error</strong></p>
+                            </div>
+		            <!-- End Message Error -->
+                        }
+                    }
+                    @using (Html.BeginForm("Edit", "ConditionMatrix", FormMethod.Post, new { @class = "form-horizontal" }))
+                    {
+                        @Html.HiddenFor(m => m.BU)
+                        @Html.HiddenFor(m => m.ID)
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ConditionType, new { @class = "control-label" })
+                                @Html.EnumDropDownListFor(t => t.ConditionType, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.ConditionType, null, new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Perc, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.Perc, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.Perc, null, new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.FixedAmount, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.FixedAmount, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.FixedAmount, null, new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ContractType, new { @class = "control-label" })
+                                @Html.EnumDropDownListFor(t => t.ContractType, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.ContractType, null, new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.RangeStart, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.RangeStart, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.RangeStart, null, new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Bonus, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.Bonus, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.Bonus, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.SL, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.SL, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.SL, null, new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.RangeEnd, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.RangeEnd, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.RangeEnd, null, new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.LtrQty, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.LtrQty, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.LtrQty, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <p style="text-align:center;">
+                                <button type="submit" class="btn btn-primary" id="btnSubmit">
+                                    <i class="fa fa-fw fa-save"></i> Update Condition
+                                </button>
+                                <a href="@Url.Content("~/ConditionMatrix/Index")" class="btn btn-success">
+                                    <i class="fa fa-fw fa-backward"></i> Back to List
+                                </a>
+                            </p>
+                        </div>
+
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+

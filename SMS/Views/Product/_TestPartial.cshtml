@@ -1,0 +1,28 @@
+﻿<script type="text/javascript">
+    var callbackInitDate;
+    var command;
+
+    function OnStartCallback(s, e) {
+        callbackInitDate = new Date();
+        command = e.command;
+    }
+    function OnEndCallback(s, e) {
+        var currentDate = new Date();
+        var time = currentDate - callbackInitDate;
+        document.getElementById("Operation").innerHTML = command;
+        document.getElementById("Time").innerHTML = time;
+    }
+</script>
+
+<div class="performace_test_result">
+    <table>
+        <tr>
+            <td>Operation:</td>
+            <td id="Operation">&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Time taken:</td>
+            <td style="color:red"><span id="Time">&nbsp;</span>&nbsp;ms</td>
+        </tr>
+    </table>
+</div>

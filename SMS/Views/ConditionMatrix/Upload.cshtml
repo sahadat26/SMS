@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "Upload";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h3><i class="fa fa-fw fa-upload"></i> Upload Targets</h3>
+<div class="container-fluid">
+    <div class="row">
+
+        @{
+
+            if (ViewBag.Info != null)
+            {
+                    <!-- Message OK -->
+                <div class="alert alert-info">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong>@ViewBag.Info</strong>
+                </div>
+		            <!-- End Message OK -->
+            }
+            else if (ViewBag.Error != null)
+            {
+		            <!-- Message Error -->
+                <div class="alert alert-danger">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <p><strong>@ViewBag.Error</strong></p>
+                </div>
+		            <!-- End Message Error -->
+            }
+        }
+
+
+        <div class="col-lg-3">
+
+        </div>
+        <div class="col-lg-6">
+
+            <form action="/ConditionMatrix/Upload" method="post" enctype="multipart/form-data" class="form-inline" style="float:left;">
+
+                <span style="display:inline-block;">
+
+                    <input type="file" class="form-control input-sm" required name="UploadedFile" />
+
+                </span>
+
+                <span style="display:inline-block;">
+                    <button type="submit" class="btn btn-sm btn-success" id="btnSearch">
+
+                        <i class="fa fa-fw fa-upload"></i>Upload
+                    </button>
+                </span>
+                &nbsp;&nbsp;
+                <span style="display:inline-block;">
+
+                    <a href="~/Upload/ASETarget.xlsx" class="btn btn-sm btn-primary" title="Download Teamplate">
+                        <i class="fa fa-fw fa-download"></i>
+                        Download Teamplate
+                    </a>
+                 
+
+                  
+                   
+                </span>
+
+            </form>
+
+            
+        </div>
+       
+        <div class="col-lg-3">
+
+        </div>
+
+    </div>
+</div>
+
+

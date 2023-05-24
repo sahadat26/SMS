@@ -1,0 +1,208 @@
+﻿@model SMS.Models.User
+@using SMS.Models
+@{
+    ViewBag.Title = "Update User";
+    UserInfo UI = new SMS.Models.UserInfo();
+    UI = UserInfo.GetUserInfo(User.Identity.Name);
+}
+
+<div class="container-fluid">
+
+
+    <div class="row">
+        <div class="col-lg-8">
+            <h3 style="color:royalblue;"><i class="fa fa-fw fa-user"></i> Update User</h3>
+            <div class="panel panel-primary">
+
+                <div class="panel-body">
+                    <br />
+                    @{
+
+                        if (ViewBag.Info != null)
+                        {
+                    <!-- Message OK -->
+                            <div class="alert alert-info">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <strong>@ViewBag.Info</strong>
+                            </div>
+		            <!-- End Message OK -->
+                        }
+                        else if (ViewBag.Error != null)
+                        {
+		            <!-- Message Error -->
+                            <div class="alert alert-danger">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <p><strong>@ViewBag.Error</strong></p>
+                            </div>
+		            <!-- End Message Error -->
+                        }
+                    }
+                    @using (Html.BeginForm("Edit", "Account", FormMethod.Post, new { @class = "form-horizontal", @autocomplete = "off" }))
+                    {
+                        @Html.HiddenFor(u => u.UserID)
+                        @Html.HiddenFor(u => u.Exist)
+                        @Html.HiddenFor(u => u.BusinessUnit)
+                        @Html.HiddenFor(u => u.ProfitCenter)
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.UserName, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.UserName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.UserName, null, new { @class = "text-danger" })
+
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.FullName, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.FullName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.FullName, null, new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.DesignationID, new { @class = "control-label" })
+
+                                @Html.DropDownListFor(t => t.DesignationID, ViewBag.Designations as SelectList, "Select Designations", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.DesignationID, null, new { @class = "text-danger" })
+
+                            </div>
+                            @if (UI.Module == EModule.ASE_Commission)
+                            {
+                                if (Model.IsASE == true)
+                                {
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.BasicSalary, new { @class = "control-label" })
+                                        @Html.TextBoxFor(t => t.BasicSalary, new { @class = "form-control" })
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.FoodAllowance, new { @class = "control-label" })
+                                        @Html.TextBoxFor(t => t.FoodAllowance, new { @class = "form-control" })
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.AdditionalAllowance, new { @class = "control-label" })
+                                        @Html.TextBoxFor(t => t.AdditionalAllowance, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.Wing, new { @class = "control-label" })
+                                        @Html.TextBoxFor(t => t.Wing, new { @class = "form-control" })
+                                    </div>
+
+                                }
+                                 <div class="form-group">
+                                    @Html.LabelFor(m => m.userType, new { @class = "control-label" })
+
+                                    @Html.EnumDropDownListFor(t => t.userType, new { @class = "form-control" })
+
+                                    @Html.ValidationMessageFor(t => t.userType, null, new { @class = "text-danger" })
+
+
+                                </div>
+                            }
+
+
+                        </div>
+                        <div class="col-lg-6">
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Department, new { @class = "control-label" })
+
+                                @Html.TextBoxFor(t => t.Department, new { @class = "form-control", @list = "lstDepartment" })
+                                @Html.ValidationMessageFor(t => t.Department, null, new { @class = "text-danger" })
+                                <datalist id="lstDepartment">
+                                    @foreach (var item in ViewBag.Departments as SelectList)
+                                    {
+                                        <option value="@item.Text">@item.Text</option>
+                                    }
+                                </datalist>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.SupervisorID, new { @class = "control-label" })
+
+                                @Html.DropDownListFor(t => t.SupervisorID, ViewBag.Supervisors as SelectList, "Select Supervisor", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.SupervisorID, null, new { @class = "text-danger" })
+
+                            </div>
+
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+
+                                @Html.TextBoxFor(t => t.Email, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.Email, null, new { @class = "text-danger" })
+
+                            </div>
+                            @if (UI.Module == EModule.ASE_Commission)
+                            {
+                                if (Model.IsASE == true)
+                                {
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.ConveyanceAllowance, new { @class = "control-label" })
+                                        @Html.TextBoxFor(t => t.ConveyanceAllowance, new { @class = "form-control" })
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.MobileAllowance, new { @class = "control-label" })
+                                        @Html.TextBoxFor(t => t.MobileAllowance, new { @class = "form-control" })
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.DeductionAllowance, new { @class = "control-label" })
+                                        @Html.TextBoxFor(t => t.DeductionAllowance, new { @class = "form-control" })
+                                    </div>
+
+
+
+                                }
+                               
+                            }
+
+                        </div>
+
+
+
+
+                        <div class="col-lg-12">
+                            <p style="text-align:center;">
+                                <button type="submit" class="btn btn-primary" id="btnSubmit">
+                                    <i class="fa fa-fw fa-save"></i> Update User
+                                </button>
+                            </p>
+                        </div>
+
+                    }
+
+
+                </div>
+            </div>
+        </div>
+        <div id="divDesignationRate" class="col-lg-4">
+            @Html.Partial("_DesignationRate", Model.Designation)
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/select2")
+    <script type="text/javascript">
+        $("#SupervisorID").select2();
+        $("#DesignationID").change(
+                function () {
+                    var did = $("#DesignationID").val();
+                    $.ajax(
+                        {
+                            type: "POST",
+                            url: "/Account/GetDesignation/",
+                            data: { 'DesignationID': did },
+                            datatype: "html",
+                            success: function (result) {
+                                $("#divDesignationRate").html(result);
+                            }
+                        }
+                        );
+                }
+            );
+    </script>
+}
+
+

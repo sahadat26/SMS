@@ -1,0 +1,231 @@
+﻿@model IEnumerable<SMS.Models.SAPProduct>
+@{
+    ViewBag.Title = " List of SAP Generators";
+    bool ChkVal = (ViewBag.Chk as bool?).Value;
+}
+@Html.DevExpress().GetScripts(
+                new Script { ExtensionSuite = ExtensionSuite.CardView }
+    )
+
+@Html.DevExpress().GetStyleSheets(
+                new StyleSheet { ExtensionSuite = ExtensionSuite.CardView }
+    )
+<style type="text/css">
+    @@media all and (max-width: 600px) {
+        .FlowCard {
+            width: 300px !important;
+            height: auto !important;
+        }
+    }
+</style>
+<script type="text/javascript">
+    function UpdateCardViewHeight() {
+        cardView.SetHeight(0);
+        var containerHeight = ASPxClientUtils.GetDocumentClientHeight();
+        if (document.body.scrollHeight > containerHeight)
+            containerHeight = document.body.scrollHeight;
+        cardView.SetHeight(containerHeight - 250);
+    }
+</script>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="clearfix">
+                <div class="pull-left">
+                    <h3 style="color:royalblue;">
+                        <i class="fa fa-fw fa-gears"></i> All SAP Generators &nbsp;&nbsp;
+                    </h3>
+                </div>
+                <div class="pull-right">
+                    <h6>
+                        <form action="/Product/SAPProductList" class="form-inline" style="float:right;" id="frm">
+                            <div class="form-group">
+                                @Html.CheckBox("WithDate", ChkVal)
+                            </div>
+                            <div class="input-group date">
+                                @Html.TextBox("Start", ViewBag.StartDate as string,
+                                    new
+                                    {
+                                        @readonly = "true",
+                                        @class = "form-control input-sm",
+                                        @data_provide = "datepicker",
+                                        @data_date_autoclose = "true",
+                                        @style = "cursor:pointer;width:100px;"
+                                    })
+                                <div class="input-group-addon">
+                                    <span class="fa fa-fw fa-calendar"></span>
+                                </div>
+                            </div>
+                            <div class="input-group date">
+                                @Html.TextBox("End", ViewBag.EndDate as string,
+                                    new
+                                    {
+                                        @readonly = "true",
+                                        @class = "form-control input-sm",
+                                        @data_provide = "datepicker",
+                                        @data_date_autoclose = "true",
+                                        @style = "cursor:pointer;width:100px;"
+                                    })
+                                <div class="input-group-addon">
+                                    <span class="fa fa-fw fa-calendar"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <input type="text" id="q" name="q" class="form-control input-sm"
+                                       placeholder="Search Keywords" value="@ViewBag.SearchText" />
+                                <button id="btnSearch" type="submit" class="btn btn-sm btn-success">
+                                    <i class="fa fa-fw fa-search"></i> Search
+                                </button>
+
+                                @if (ViewBag.SearchText != null)
+                                {
+                                    <span style="display:inline-block;">
+                                        <i style="color:red;" class="fa fa-fw fa-times"></i>
+                                        <a title="Clear Search" href="@Url.Content("~/Product/SAPProductList")">Clear Search(@Model.Count())</a>
+                                    </span>
+                                }
+                                <button data-loading-text="Syncing......." type="button" class="btn btn-sm btn-warning" id="btnSync">
+                                    <i class="fa fa-fw fa-refresh"></i>Sync Product
+                                </button>
+                            </div>
+                        </form>
+                    </h6>
+
+                </div>
+            </div>
+            
+            @{
+
+                if (ViewBag.Info != null)
+                {
+                    <!-- Message OK -->
+                    <div class="alert alert-info">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>@ViewBag.Info</strong>
+                    </div>
+		            <!-- End Message OK -->
+                }
+                else if (ViewBag.Error != null)
+                {
+		            <!-- Message Error -->
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <p><strong>@ViewBag.Error</strong></p>
+                    </div>
+		            <!-- End Message Error -->
+                }
+            }
+
+            @*@using GridMvc.Html*@
+            @*@Html.Partial("_TestPartial")*@
+            @using (Html.BeginForm("QRPrint", "Report", FormMethod.Post, new { @id = "frmQR", @target = "_blank" }))
+            {
+                <div class="col-md-12">
+                    <p style="text-align:center;">
+                        @Html.CheckBox("check-all", new { @class = "control-checkbox" })  Select/Deselect
+                        <button type="button" class="btn btn-sm btn-success" id="btnSubmit">
+                            <i class="fa fa-fw fa-print"></i> Print Preview
+                        </button>
+                        @{
+                        var layouts = Enum.GetValues(typeof(SMS.Models.EReportBy))
+                       .Cast<SMS.Models.EReportBy>().OrderBy(e => e)
+
+                       .Select(e => new SelectListItem
+                       {
+                           Value = ((int)e).ToString(),
+                           Text = e.ToString()
+                       });
+                        }
+                <span style="display:inline-block;">
+                    @Html.DropDownList("Layout", layouts, new { @class = "form-control input-sm" })
+                </span>
+                    </p>
+
+                </div>
+                 @Html.Partial("_IndexPartial",Model)
+            }
+                <script type="text/javascript">
+                    ASPxClientControl.GetControlCollection().ControlsInitialized.AddHandler(function (s, e) {
+                        UpdateCardViewHeight();
+                    });
+                    ASPxClientControl.GetControlCollection().BrowserWindowResized.AddHandler(function (s, e) {
+                        UpdateCardViewHeight();
+                    });
+                </script>  
+                @*<div class="col-md-12">
+                    <p style="text-align:center;">
+                        @Html.CheckBox("check-all", new { @class = "control-checkbox" })  Select/Deselect
+                        <button type="button" class="btn btn-sm btn-success" id="btnSubmit">
+                            <i class="fa fa-fw fa-print"></i> Print Preview
+                        </button>
+                        
+                    </p>
+
+                </div>
+                <div class="col-md-12" style="height:400px;overflow-x:scroll;">
+                    @Html.Grid(Model).Columns(
+                    col =>
+                    {
+                        col.Add().Titled("Select").Filterable(true).Sortable(true).Sanitized(false).Encoded(false)
+                            .RenderValueAs(m =>
+                                @<text>
+                                    <input type="checkbox" name="chk" class="checkbox" value="@(m.ENGINESERIAL)" />
+                                </text>
+                            );
+                        col.Add(i => i.ENGINESERIAL).Titled("Serial").Sortable(true).Filterable(true);
+                        col.Add(i => i.DELIVERYDATE).Titled("Delivery Date").Filterable(true).Sortable(true).Format("{0:dd MMM, yyyy}");
+                        col.Add(i => i.GRDATE).Titled("GR Date").Filterable(true).Sortable(true).Format("{0:dd MMM, yyyy}");
+                        col.Add(i => i.DOCNO).Titled("Order No").Filterable(true).Sortable(true);
+                        col.Add(i => i.CustomerDisplay).Titled("Customer Name").Filterable(true).Sortable(true);
+                        col.Add(i => i.MaterialDisplay).Titled("Product Name").Filterable(true).Sortable(true);
+                        col.Add().Titled("Action").Encoded(false).Sanitized(false).RenderValueAs(m =>
+                        @<text>
+
+                            <a href="@Url.Content("~/SPService/NewService?Serial=" + m.ENGINESERIAL)" title="New Service"><i class="fa fa-fw fa-plus-circle"></i></a>
+            
+                            
+                        </text>
+                        );
+                    }
+                    ).WithPaging(100, 20)
+                </div>*@   
+            
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @*@Scripts.Render("~/bundles/gridmvc")*@
+    @Scripts.Render("~/bundles/ajax")
+    
+    <script type="text/javascript">
+        $("#btnSync").click(function () {
+            $("#btnSync").button('loading');
+            $("#frm").prop("action", "/Product/SyncSAPProduct");
+            $("#frm").submit();
+        });
+
+        $("#check-all").click(
+        function () {
+            if ($("#check-all").is(":checked")) {
+                $(".checkbox-inline").prop("checked", true);
+            }
+            else {
+                $(".checkbox-inline").prop("checked", false);
+            }
+        }
+        );
+
+        $("#btnSubmit").click(
+            function () {
+                $("#frmQR").attr("Action", "/Report/QRPrint");
+                $("#frmQR").submit();
+            }
+            );
+    </script>
+}
+
+
+

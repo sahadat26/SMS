@@ -1,0 +1,245 @@
+﻿@model SMS.Models.SC_ReportParameter
+@{
+    ViewBag.Title = "Sales Commission Report";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <i class="fa fa-fw fa-filter"></i> Report Parameter
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    
+                    @{
+
+                        if (ViewBag.Info != null)
+                        {
+                    <!-- Message OK -->
+                            <div class="alert alert-info">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <strong>@ViewBag.Info</strong>
+                            </div>
+		            <!-- End Message OK -->
+                        }
+                        else if (ViewBag.Error != null)
+                        {
+		            <!-- Message Error -->
+                            <div class="alert alert-danger">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <p><strong>@ViewBag.Error</strong></p>
+                            </div>
+		            <!-- End Message Error -->
+                        }
+                    }
+                    <form action="/Report/PreviewReport" method="post" class="form-inline" id="frm">
+                        @Html.HiddenFor(m=>m.ReportID)
+                        <div class="form-group">
+                            
+                            <div class="input-group date">
+                                @Html.TextBox("Start", Model.Start.ToString("MM/dd/yyyy"),
+                                    new
+                                    {
+                                        @readonly = "true",
+                                        @class = "form-control input-sm",
+                                        @data_provide = "datepicker",
+                                        @data_date_autoclose = "true",
+                                        @style = "cursor:pointer;"
+                                    })
+                                <div class="input-group-addon">
+                                    <span class="fa fa-fw fa-calendar"></span>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="form-group">
+                            <div class="input-group date">
+                                @Html.TextBox("End", Model.End.ToString("MM/dd/yyyy"),
+                                    new
+                                    {
+                                        @readonly = "true",
+                                        @class = "form-control input-sm",
+                                        @data_provide = "datepicker",
+                                        @data_date_autoclose = "true",
+                                        @style = "cursor:pointer;"
+                                    })
+                                <div class="input-group-addon">
+                                    <span class="fa fa-fw fa-calendar"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.DropDownListFor(t => t.ASEID, ViewBag.ASE as SelectList, "Select ASE", new { @class = "form-control input-sm", @style = "width:200px" })
+                            @Html.ValidationMessageFor(t => t.ASEID, null, new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBoxFor(t => t.Month, new { @class = "form-control input-sm", @style = "width:100px" })
+                            @Html.ValidationMessageFor(t => t.Month, null, new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.TextBoxFor(t => t.SalesRange, new { @class = "form-control input-sm", @style = "width:50px" })
+                                <span class="input-group-addon">
+                                    Days
+                                </span>
+                            </div>
+                            
+                            @Html.ValidationMessageFor(t => t.SalesRange, null, new { @class = "text-danger" }) 
+                        </div>
+                        
+                        
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Summary Report</h3>
+                </div>
+                <div class="panel-body">
+                    <ul>
+                        <li>
+                            <a href="#" onclick="PreviewReport(1)">
+                                ASE Sales Commission Summary
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(2)">
+                                ASE Target vs Actual Summary
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(3)">
+                                ASE Lube Oil Collection Summary
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(4)">
+                                ASE Service/TDS Collection Summary
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(5)">
+                                ASE CSA Contract Summary
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(99)">
+                                ASE Monthly Salary With Commission Summary
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Detail Report</h3>
+                </div>
+                <div class="panel-body">
+                    <ul>
+                        <li>
+                            <a href="#" onclick="PreviewReport(6)">
+                                Single ASE Sales Commission Detail
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(7)">
+                                Single ASE Target vs Actual Detail
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(8)">
+                                Single ASE Lube Oil Collection Detail
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(9)">
+                                Single ASE Service/TDS Collection Detail
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(10)">
+                                Single ASE CSA Contract Detail
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Miscellanies</h3>
+                </div>
+                <div class="panel-body">
+                    @*<ul>
+                        <li>
+                            <a href="#" onclick="PreviewReport(10)">
+                                Job History By Service People
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(12)">
+                                Job History By Customer
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="PreviewReport(13)">
+                                Job History in a Date Range
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank">
+                                
+                            </a>
+                        </li>
+                    </ul>*@
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/select2")
+    <script type="text/javascript">
+        $("#ASEID").select2();
+        function PreviewReport(RID)
+        {
+            $("#ReportID").val(RID);
+            var flag = true;
+            switch(true)
+            {
+                case (RID>=6&&RID<=10):
+                    {
+                        if ($("#ASEID").val() == "") {
+                            flag = false;
+                            alert("No ASE Selected");
+                        }
+                        break;
+                    }
+                
+            }
+            if(flag)
+            {
+                $("#frm").prop("target", "_blank");
+                $("#frm").submit();
+            }
+        }
+        
+    </script>
+}
+

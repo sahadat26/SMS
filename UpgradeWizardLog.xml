@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="_UpgradeWizard_Files\UpgradeWizardLog.xslt"?>
+<log>
+  <event action="Analyze" type="Success" name="Assembly References" path="F:\TempDotNet\ETicket\ETicket\ETicket.csproj" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Assembly References" path="F:\TempDotNet\ETicket\ETicket\packages.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="F:\TempDotNet\ETicket\ETicket\packages.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="F:\TempDotNet\ETicket\ETicket\packages.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="F:\TempDotNet\ETicket\ETicket\packages.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="F:\TempDotNet\ETicket\ETicket\packages.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="F:\TempDotNet\ETicket\ETicket\packages.config" />
+  <event action="Analyze" type="Success" name="packages.config" path="F:\TempDotNet\ETicket\ETicket\packages.config" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Project_Readme.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Project_Readme.html" />
+  <event action="Analyze" type="Success" name="Project_Readme.html" path="F:\TempDotNet\ETicket\ETicket\Project_Readme.html" />
+  <event action="Analyze" type="Success" name="rpDashboard.resx" path="F:\TempDotNet\ETicket\ETicket\Reports\rpDashboard.resx" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\_ViewStart.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\_ViewStart.cshtml" />
+  <event action="Analyze" type="Success" name="_ViewStart.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\_ViewStart.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Account\ChangePassword.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Account\ChangePassword.cshtml" />
+  <event action="Analyze" type="Success" name="ChangePassword.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Account\ChangePassword.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Account\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Account\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Edit.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Account\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Account\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Account\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Index.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Account\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Account\LogOn.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Account\LogOn.cshtml" />
+  <event action="Analyze" type="Success" name="LogOn.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Account\LogOn.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Account\NoPermission.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Account\NoPermission.cshtml" />
+  <event action="Analyze" type="Success" name="NoPermission.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Account\NoPermission.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Account\Register.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Account\Register.cshtml" />
+  <event action="Analyze" type="Success" name="Register.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Account\Register.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\FunctionalUnit\Add.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\FunctionalUnit\Add.cshtml" />
+  <event action="Analyze" type="Success" name="Add.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\FunctionalUnit\Add.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\FunctionalUnit\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\FunctionalUnit\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Edit.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\FunctionalUnit\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\FunctionalUnit\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\FunctionalUnit\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Index.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\FunctionalUnit\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\GeneralUser\Add.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\GeneralUser\Add.cshtml" />
+  <event action="Analyze" type="Success" name="Add.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\GeneralUser\Add.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\GeneralUser\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\GeneralUser\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Edit.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\GeneralUser\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\GeneralUser\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\GeneralUser\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Index.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\GeneralUser\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Home\BlankPage.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Home\BlankPage.cshtml" />
+  <event action="Analyze" type="Success" name="BlankPage.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Home\BlankPage.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Home\BootstrapElements.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Home\BootstrapElements.cshtml" />
+  <event action="Analyze" type="Success" name="BootstrapElements.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Home\BootstrapElements.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Home\BootstrapGrid.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Home\BootstrapGrid.cshtml" />
+  <event action="Analyze" type="Success" name="BootstrapGrid.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Home\BootstrapGrid.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Home\Forms.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Home\Forms.cshtml" />
+  <event action="Analyze" type="Success" name="Forms.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Home\Forms.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Home\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Home\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Index.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Home\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Home\Tables.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Home\Tables.cshtml" />
+  <event action="Analyze" type="Success" name="Tables.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Home\Tables.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Permission\SetPermission.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Permission\SetPermission.cshtml" />
+  <event action="Analyze" type="Success" name="SetPermission.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Permission\SetPermission.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\_Grid.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\_Grid.cshtml" />
+  <event action="Analyze" type="Success" name="_Grid.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\_Grid.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\_GridPager.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\_GridPager.cshtml" />
+  <event action="Analyze" type="Success" name="_GridPager.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\_GridPager.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\_Layout.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\_Layout.cshtml" />
+  <event action="Analyze" type="Success" name="_Layout.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\_Layout.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\_navbar.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\_navbar.cshtml" />
+  <event action="Analyze" type="Success" name="_navbar.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\_navbar.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\Error.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\Error.cshtml" />
+  <event action="Analyze" type="Success" name="Error.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\Error.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\ReportPreview.aspx" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\ReportPreview.aspx" />
+  <event action="Analyze" type="Success" name="ReportPreview.aspx" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\ReportPreview.aspx" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\TicketUpperMenu.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\TicketUpperMenu.cshtml" />
+  <event action="Analyze" type="Success" name="TicketUpperMenu.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\TicketUpperMenu.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\TaskCategory\_AddUserToTask.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\TaskCategory\_AddUserToTask.cshtml" />
+  <event action="Analyze" type="Success" name="_AddUserToTask.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\TaskCategory\_AddUserToTask.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\TaskCategory\Add.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\TaskCategory\Add.cshtml" />
+  <event action="Analyze" type="Success" name="Add.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\TaskCategory\Add.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\TaskCategory\AssignTask.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\TaskCategory\AssignTask.cshtml" />
+  <event action="Analyze" type="Success" name="AssignTask.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\TaskCategory\AssignTask.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\TaskCategory\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\TaskCategory\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Edit.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\TaskCategory\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\TaskCategory\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\TaskCategory\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Index.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\TaskCategory\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Ticket\ClosedTicketList.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Ticket\ClosedTicketList.cshtml" />
+  <event action="Analyze" type="Success" name="ClosedTicketList.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Ticket\ClosedTicketList.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Ticket\CloseTicket.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Ticket\CloseTicket.cshtml" />
+  <event action="Analyze" type="Success" name="CloseTicket.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Ticket\CloseTicket.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Ticket\NewTicket.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Ticket\NewTicket.cshtml" />
+  <event action="Analyze" type="Success" name="NewTicket.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Ticket\NewTicket.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Ticket\NewTicketList.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Ticket\NewTicketList.cshtml" />
+  <event action="Analyze" type="Success" name="NewTicketList.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Ticket\NewTicketList.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Ticket\PendingTicketList.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Ticket\PendingTicketList.cshtml" />
+  <event action="Analyze" type="Success" name="PendingTicketList.cshtml" path="F:\TempDotNet\ETicket\ETicket\Views\Ticket\PendingTicketList.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly References" path="F:\TempDotNet\ETicket\ETicket\Views\Web.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="F:\TempDotNet\ETicket\ETicket\Views\Web.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="F:\TempDotNet\ETicket\ETicket\Views\Web.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="F:\TempDotNet\ETicket\ETicket\Views\Web.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="F:\TempDotNet\ETicket\ETicket\Views\Web.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="F:\TempDotNet\ETicket\ETicket\Views\Web.config" />
+  <event action="Analyze" type="Success" name="Web.config" path="F:\TempDotNet\ETicket\ETicket\Views\Web.config" />
+  <event action="Analyze" type="Success" name="Assembly References" path="F:\TempDotNet\ETicket\ETicket\Web.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="F:\TempDotNet\ETicket\ETicket\Web.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="F:\TempDotNet\ETicket\ETicket\Web.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="F:\TempDotNet\ETicket\ETicket\Web.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="F:\TempDotNet\ETicket\ETicket\Web.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="F:\TempDotNet\ETicket\ETicket\Web.config" />
+  <event action="Analyze" type="Success" name="Web.config" path="F:\TempDotNet\ETicket\ETicket\Web.config" />
+  <event action="Analyze" type="Success" name="Assembly References" path="F:\TempDotNet\ETicket\ETicket\Web.Debug.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="F:\TempDotNet\ETicket\ETicket\Web.Debug.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="F:\TempDotNet\ETicket\ETicket\Web.Debug.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="F:\TempDotNet\ETicket\ETicket\Web.Debug.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="F:\TempDotNet\ETicket\ETicket\Web.Debug.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="F:\TempDotNet\ETicket\ETicket\Web.Debug.config" />
+  <event action="Analyze" type="Success" name="Web.Debug.config" path="F:\TempDotNet\ETicket\ETicket\Web.Debug.config" />
+  <event action="Analyze" type="Success" name="Assembly References" path="F:\TempDotNet\ETicket\ETicket\Web.Release.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="F:\TempDotNet\ETicket\ETicket\Web.Release.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="F:\TempDotNet\ETicket\ETicket\Web.Release.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="F:\TempDotNet\ETicket\ETicket\Web.Release.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="F:\TempDotNet\ETicket\ETicket\Web.Release.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="F:\TempDotNet\ETicket\ETicket\Web.Release.config" />
+  <event action="Analyze" type="Success" name="Web.Release.config" path="F:\TempDotNet\ETicket\ETicket\Web.Release.config" />
+  <event action="Analyze" type="Success" name="ETicket" path="F:\TempDotNet\ETicket\ETicket\ETicket.csproj" />
+  <event action="Analyze" type="Success" name="ETicket" path="F:\TempDotNet\ETicket\ETicket.sln" />
+  <event action="Backup" type="Success" name="ETicket" path="F:\TempDotNet\ETicket\ETicket\ETicket.csproj" />
+  <event action="Upgrade" type="Success" name="Assembly References" path="F:\TempDotNet\ETicket\ETicket\ETicket.csproj" />
+  <event action="Upgrade" type="Success" name="rpDashboard.resx" path="F:\TempDotNet\ETicket\ETicket\Reports\rpDashboard.resx" />
+  <event action="Upgrade" type="Success" name="Register Directives" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\ReportPreview.aspx" />
+  <event action="Upgrade" type="Success" name="ReportPreview.aspx" path="F:\TempDotNet\ETicket\ETicket\Views\Shared\ReportPreview.aspx" />
+  <event action="Upgrade" type="Success" name="ETicket" path="F:\TempDotNet\ETicket\ETicket\ETicket.csproj" />
+  <event action="Upgrade" type="Success" name="ETicket" path="F:\TempDotNet\ETicket\ETicket.sln" />
+</log>

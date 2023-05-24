@@ -1,0 +1,234 @@
+﻿@model SMS.Models.ServiceProduct
+
+@{
+    ViewBag.Title = "Manage Service Products";
+    var sc = ViewBag.SC as SMS.Models.ServiceContract;
+}
+
+<div class="container-fluid">
+    <div class="col-lg-9">
+        
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 style="color:royalblue;"><i class="fa fa-fw fa-rub"></i> Manage Service Products</h3>
+                <div class="panel panel-primary">
+
+                    <div class="panel-body">
+                        <br />
+                        @{
+
+                            if (ViewBag.Info != null)
+                            {
+                    <!-- Message OK -->
+                                <div class="alert alert-info">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                    <strong>@ViewBag.Info</strong>
+                                </div>
+		            <!-- End Message OK -->
+                            }
+                            else if (ViewBag.Error != null)
+                            {
+		            <!-- Message Error -->
+                                <div class="alert alert-danger">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                    <p><strong>@ViewBag.Error</strong></p>
+                                </div>
+		            <!-- End Message Error -->
+                            }
+                        }
+                        @using (Html.BeginForm("SaveSP", "Contract", FormMethod.Post, new { @class = "form-inline", @autocomplete = "off" }))
+                        {
+                            @Html.HiddenFor(m=>m.ServiceContractID)
+                            @Html.HiddenFor(m=>m.ServiceProductID)
+                            <div class="col-lg-12">
+                                <fieldset>
+                                    <legend>Product Information</legend>
+                                    <div class="form-group">
+                                        @Html.LabelFor(t=>t.ProductID)<br />
+                                        @Html.DropDownListFor(t => t.ProductID, ViewBag.Products as SelectList, "Select Product", new { @class = "form-control input-sm", @style = "width:150px;" })
+                                        @Html.ValidationMessageFor(t => t.ProductID, null, new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(t => t.ContractAmount)<br />
+                                        @Html.TextBoxFor(t => t.ContractAmount, new { @class = "form-control input-sm", @style = "width:150px;" })
+                                        @Html.ValidationMessageFor(t => t.ContractAmount, null, new { @class = "text-danger" })
+                                    </div>
+                                    
+                                </fieldset>
+                                <br />
+                                <fieldset>
+                                    <legend>Specification</legend>
+                                    @if (Model.ProductID > 0)
+                                    {
+                                        int i = 0;
+
+                                        foreach (var obj in Model.Product.Properties)
+                                        {
+                                            string pval="";
+                                            if(Model.Details.Count>i)
+                                            {
+                                                pval = Model.Details.ToList()[i].Value;
+                                            }
+                                            else
+                                            {
+                                                pval = "";
+                                            }
+                                            @Html.Hidden("details[" + i + "].ProductPropertyID", obj.ProductPropertyID)
+                                            @Html.Hidden("details[" + i + "].ProductID", Model.ServiceProductID)
+                                            <div class="form-group">
+                                                @Html.Label(obj.Property.Name)<br />
+                                                @if (obj.IsRequired)
+                                                {
+                                                    @Html.TextBox("details[" + i + "].Value", pval, new
+                                               {
+                                                   @class = "form-control input-sm",
+                                                   @required = "required",
+                                                   @style = "text-transform:uppercase",
+                                                   @list = "lst" + obj.ProductPropertyID
+                                               })
+                                                    @Html.ValidationMessage("details[" + i + "].Value", null, new { @class = "text-danger" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBox("details[" + i + "].Value", pval, new
+                                               {
+                                                   @class = "form-control input-sm",
+                                                                                                                  @style = "text-transform:uppercase",
+                                                   @list = "lst" + obj.ProductPropertyID
+                                               })
+
+                                                }
+
+                                                <datalist id="@("lst" + obj.ProductPropertyID)">
+                                                    @foreach (var val in obj.PropertyValue)
+                                                    {
+                                                        <option value="@val">@val</option>
+                                                    }
+                                                </datalist>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            </div>
+
+                                                    i++;
+                                        }
+                                    }
+                                </fieldset>
+                                <div class="col-lg-12">
+                                    <p style="text-align:center">
+                                        <br />
+                                        <button type="submit" class="btn btn-sm btn-primary" id="btnSubmit">
+                                            <i class="fa fa-fw fa-save"></i> Save Service Product
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                        
+                        <div class="col-lg-12" style="padding-bottom:10px;">
+                            <table class="table table-condensed table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th>Contact Amount</th>
+                                        <th>Specification</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var row in sc.Details.OrderBy(a=>a.ServiceProductID))
+                                {
+                                        <tr>
+                                            <td>@row.Product.ProductName</td>
+                                            <td>@row.ContractAmount</td>
+                                            <td>@Html.DisplayFor(m=>row.Property)</td>
+                                            <td>
+                                                <a href="@Url.Content("~/Contract/EditSP?ID=" + row.ServiceProductID)" title="Edit"><i class="fa fa-fw fa-pencil"></i></a>
+                                            </td>
+                                        </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+        
+    </div>
+    <div class="col-lg-3">
+        <h3 style="color:royalblue;"><i class="fa fa-fw fa-file"></i> Service Contract Info</h3>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <table class="table table-condensed table-striped">
+                    <tbody>
+                        
+                        <tr>
+                            <td class="col-lg-4"><label>Customer Name</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => sc.Customer.Name)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Start Date</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => sc.ContractStartDate)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>End Date</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => sc.ContractEndDate)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Billing Cycle</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => sc.BillingCycle)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Revision</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => sc.RevisionNo)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Status</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => sc.Status)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Attachment</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">
+                            @if (File.Exists(Server.MapPath("~/Upload/Attachment/" + (sc.AttachmentURL ?? ""))))
+                                {
+                                    <a target="_blank" href="@Url.Content("~/Upload/Attachment/"+sc.AttachmentURL)" title="Attachment"><i class="fa fa-fw fa-file-pdf-o"></i></a>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <p style="text-align:center">
+            <br />
+            <a href="@Url.Content("~/Contract/ServiceContracts")" class="btn btn-lg btn-success">
+                <i class="fa fa-fw fa-backward"></i> Back to List
+            </a>
+        </p>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    
+    <script type="text/javascript">
+        
+        $("#ProductID").change(
+            function () {
+                var ProductID = $("#ProductID").val();
+                
+                location.href = "/Contract/ManageSP?SCID=" + @sc.ServiceContractID + "&ProID=" + ProductID;
+            }
+        );
+    </script>
+}
+
+

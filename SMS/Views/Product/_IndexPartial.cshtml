@@ -1,0 +1,72 @@
+﻿@model IEnumerable<SMS.Models.SAPProduct>
+
+@(
+ Html.DevExpress().CardView(c =>
+      {
+          c.Name = "cardView";
+          c.CallbackRouteValues = new { Controller = "Product", Action = "IndexPartial",Start=ViewBag.StartDate,End=ViewBag.EndDate,q=ViewBag.SearchText};
+          c.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+          c.SettingsBehavior.AllowFocusedCard = true;
+
+          c.KeyFieldName = "DOCNO";
+          c.KeyFieldName = "ITEMNO";
+          //----------adding columns-----------
+          c.Columns.Add("FormatSerial", "Engine Serial");
+          c.Columns.Add("MaterialDisplay", "Product Name");
+          c.Columns.Add("CustomerDisplay", "Customer Name");
+          c.Columns.Add("ADDRESS", "Customer Location");
+          c.Columns.Add("DELIVERYDATE", "Delivery Date").PropertiesEdit.DisplayFormatString = "dd.MM.yyyy";
+          c.Columns.Add("DOCNO", "Order No");
+          
+          
+
+
+          //----------------adaptivity setting--------------
+          c.Settings.LayoutMode = DevExpress.Web.Layout.Flow;
+          c.Settings.VerticalScrollBarMode = ScrollBarMode.Auto;
+          c.Styles.FlowCard.Width = 350;
+          c.Styles.FlowCard.Height = System.Web.UI.WebControls.Unit.Percentage(100);
+          c.Styles.FlowCard.CssClass = "FlowCard";
+          c.SettingsPager.SettingsFlowLayout.ItemsPerPage = 100;
+          c.SettingsPager.EnableAdaptivity = true;
+          
+          //-------------command line------------------------
+          c.Columns.Add(col =>
+          {
+              col.Name = "Edit";
+              col.SetDataItemTemplateContent(container =>
+              {
+                  ViewContext.Writer.Write(
+                      "<input type='checkbox' name='chk' class='checkbox-inline' value='"+(DataBinder.Eval(container.DataItem,"ENGINESERIAL"))+"' />" +
+                      "&nbsp;&nbsp;<a style='font-size:12pt;color:green;' href='" + @Url.Content("~/SPService/NewService?DocNo=" + DataBinder.Eval(container.DataItem, "DocNo") + "&ItemNo=" + DataBinder.Eval(container.DataItem, "ItemNo")) + "' title='New Service'><i class='fa fa-plus-circle'></i></a>"
+                      );
+              });
+          });
+
+          ////-------------------add column in card item---------------
+          c.CardLayoutProperties.Items.Add(col =>
+          {
+              col.ColumnName = "Edit";
+              col.VerticalAlign = FormLayoutVerticalAlign.Top;
+              col.HorizontalAlign = FormLayoutHorizontalAlign.Right;
+
+          });
+
+          c.CardLayoutProperties.Items.Add("FormatSerial");
+          c.CardLayoutProperties.Items.Add("MaterialDisplay");
+          c.CardLayoutProperties.Items.Add("CustomerDisplay");
+          c.CardLayoutProperties.Items.Add("ADDRESS");
+          c.CardLayoutProperties.Items.Add("DELIVERYDATE");
+          c.CardLayoutProperties.Items.Add("DOCNO");
+          
+          
+          
+          //---------------performance Test--------------
+          //c.ClientSideEvents.Init = "function(s, e) { s.PerformCallback(); }";
+          //c.ClientSideEvents.BeginCallback = "function(s, e) { OnStartCallback(s, e); }";
+          //c.ClientSideEvents.EndCallback = "function(s, e) { OnEndCallback(s, e); }";
+
+        }).Bind(Model).GetHtml()
+)
+
+

@@ -1,0 +1,65 @@
+﻿
+@model SMS.Models.Job
+@{
+    ViewBag.Title = "Cancel Query";
+
+}
+
+@using (Ajax.BeginForm("CancelQuery", "Job", new AjaxOptions { HttpMethod = "POST", OnSuccess = "SuccessEvent" }, new { @class = "form-horizontal" }))
+{
+    @Html.HiddenFor(m => m.JobID)
+    <div class="form-group">
+        <label class="control-label col-lg-4">Query Description</label>
+        <div class="col-lg-8">
+            <p class="form-control-static"><strong> @Model.QueryDescription</strong></p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-4">Customer Name</label>
+        <div class="col-lg-8">
+            <p class="form-control-static">
+                <strong>
+                    @Model.Customer.Name
+                </strong>
+            </p>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label col-lg-4">Reason Of Cancel</label>
+        <div class="col-lg-8">
+            <div class="input-group" style="width:150px;">
+                @Html.TextBox("Reason", "",
+                                new
+                                {
+                                    @class = "form-control",
+                                })
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <div class="col-lg-offset-4 col-lg-8">
+            <button type="submit" class="btn btn-danger">
+                <i class="fa fa-fw fa-times"></i> Cancel Query
+            </button>
+        </div>
+    </div>
+}
+
+@Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+
+    function SuccessEvent(result) {
+        if (result.success) {
+            alert(result.message);
+            location.reload();
+        }
+        else {
+            alert(result.message);
+        }
+    }
+</script>
+
+
+

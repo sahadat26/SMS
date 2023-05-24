@@ -1,0 +1,239 @@
+﻿@model SMS.Models.WarrantyProduct
+
+@{
+    ViewBag.Title = "Manage Warranty Products";
+    var wc = ViewBag.WC as SMS.Models.WarrantyContract;
+}
+
+<div class="container-fluid">
+    <div class="col-lg-9">
+        
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 style="color:royalblue;"><i class="fa fa-fw fa-rub"></i> Manage Warranty Products</h3>
+                <div class="panel panel-primary">
+
+                    <div class="panel-body">
+                        <br />
+                        @{
+
+                            if (ViewBag.Info != null)
+                            {
+                    <!-- Message OK -->
+                                <div class="alert alert-info">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                    <strong>@ViewBag.Info</strong>
+                                </div>
+		            <!-- End Message OK -->
+                            }
+                            else if (ViewBag.Error != null)
+                            {
+		            <!-- Message Error -->
+                                <div class="alert alert-danger">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                    <p><strong>@ViewBag.Error</strong></p>
+                                </div>
+		            <!-- End Message Error -->
+                            }
+                        }
+                        @using (Html.BeginForm("SaveWP", "Contract", FormMethod.Post, new { @class = "form-inline", @autocomplete = "off" }))
+                        {
+                            @Html.HiddenFor(m=>m.WarrantyContractID)
+                            @Html.HiddenFor(m=>m.WarrantyProductID)
+                            <div class="col-lg-12">
+                                <fieldset>
+                                    <legend>Product Information</legend>
+                                    <div class="form-group">
+                                        @Html.LabelFor(t=>t.ProductID)<br />
+                                        @Html.DropDownListFor(t => t.ProductID, ViewBag.Products as SelectList, "Select Product", new { @class = "form-control input-sm", @style = "width:150px;" })
+                                        @Html.ValidationMessageFor(t => t.ProductID, null, new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(t => t.ServiceAmount)<br />
+                                        @Html.TextBoxFor(t => t.ServiceAmount, new { @class = "form-control input-sm", @style = "width:150px;" })
+                                        @Html.ValidationMessageFor(t => t.ServiceAmount, null, new { @class = "text-danger" })
+                                    </div>
+                                    
+                                </fieldset>
+                                <br />
+                                <fieldset>
+                                    <legend>Specification</legend>
+                                    @if (Model.ProductID > 0)
+                                    {
+                                        int i = 0;
+
+                                        foreach (var obj in Model.Product.Properties)
+                                        {
+                                            string pval="";
+                                            if(Model.Details.Count>i)
+                                            {
+                                                pval = Model.Details.ToList()[i].Value;
+                                            }
+                                            else
+                                            {
+                                                pval = "";
+                                            }
+                                            @Html.Hidden("details[" + i + "].ProductPropertyID", obj.ProductPropertyID)
+                                            @Html.Hidden("details[" + i + "].ProductID", Model.WarrantyProductID)
+                                            <div class="form-group">
+                                                @Html.Label(obj.Property.Name)<br />
+                                                @if (obj.IsRequired)
+                                                {
+                                                    @Html.TextBox("details[" + i + "].Value", pval, new
+                                               {
+                                                   @class = "form-control input-sm",
+                                                   @required = "required",
+                                                   @style = "text-transform:uppercase",
+                                                   @list = "lst" + obj.ProductPropertyID
+                                               })
+                                                    @Html.ValidationMessage("details[" + i + "].Value", null, new { @class = "text-danger" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBox("details[" + i + "].Value", pval, new
+                                               {
+                                                   @class = "form-control input-sm",
+                                                    @style = "text-transform:uppercase",
+                                                   @list = "lst" + obj.ProductPropertyID
+                                               })
+
+                                                }
+
+                                                <datalist id="@("lst" + obj.ProductPropertyID)">
+                                                    @foreach (var val in obj.PropertyValue)
+                                                    {
+                                                        <option value="@val">@val</option>
+                                                    }
+                                                </datalist>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            </div>
+
+                                                    i++;
+                                        }
+                                    }
+                                </fieldset>
+                                <div class="col-lg-12">
+                                    <p style="text-align:center">
+                                        <br />
+                                        <button type="submit" class="btn btn-sm btn-primary" id="btnSubmit">
+                                            <i class="fa fa-fw fa-save"></i> Save Warranty Product
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                        
+                        <div class="col-lg-12" style="padding-bottom:10px;">
+                            <table class="table table-condensed table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th>Service Amount</th>
+                                        <th>Specification</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var row in wc.Details.OrderBy(a=>a.WarrantyProductID))
+                                {
+                                        <tr>
+                                            <td>@row.Product.ProductName</td>
+                                            <td>@row.ServiceAmount</td>
+                                            <td>@Html.DisplayFor(m=>row.Property)</td>
+                                            <td>
+                                                <a href="@Url.Content("~/Contract/EditWP?ID=" + row.WarrantyProductID)" title="Edit"><i class="fa fa-fw fa-pencil"></i></a>
+                                            </td>
+                                        </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+        
+    </div>
+    <div class="col-lg-3">
+        <h3 style="color:royalblue;"><i class="fa fa-fw fa-file"></i> Warranty Contract Info</h3>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <table class="table table-condensed table-striped">
+                    <tbody>
+                        
+                        <tr>
+                            <td class="col-lg-4"><label>Customer Name</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => wc.Customer.Name)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Warranty Start Date</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => wc.WarrantyStart)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Warranty End Date</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => wc.WarrantyEnd)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Purchase Date</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => wc.PurchaseDate)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Install Date</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => wc.InstallDate)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Warranty Expired on Running Hour</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => wc.ExpiredRunningHour)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Status</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => wc.Status)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Attachment</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">
+                            @if (File.Exists(Server.MapPath("~/Upload/Attachment/" + (wc.AttachmentURL ?? ""))))
+                                {
+                                    <a target="_blank" href="@Url.Content("~/Upload/Attachment/" + wc.AttachmentURL)" title="Attachment"><i class="fa fa-fw fa-file-pdf-o"></i></a>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <p style="text-align:center">
+            <br />
+            <a href="@Url.Content("~/Contract/WarrantyContracts")" class="btn btn-lg btn-success">
+                <i class="fa fa-fw fa-backward"></i> Back to List
+            </a>
+        </p>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    
+    <script type="text/javascript">
+        
+        $("#ProductID").change(
+            function () {
+                var ProductID = $("#ProductID").val();
+                
+                location.href = "/Contract/ManageWP?WCID=" + @wc.WarrantyContractID + "&ProID=" + ProductID;
+            }
+        );
+    </script>
+}
+
+

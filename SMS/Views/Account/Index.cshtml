@@ -1,0 +1,187 @@
+﻿@model IEnumerable<SMS.Models.User>
+@{
+    ViewBag.Title = "List of Users";
+}
+
+<div class="container-fluid">
+    
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 style="color:royalblue;">
+                <i class="fa fa-fw fa-user"></i> List of Users&nbsp;&nbsp;
+                <a href="@Url.Content("~/Account/Register")" class="btn btn-sm btn-primary" title="Create User">
+                    <i class="fa fa-fw fa-plus-circle"></i>
+                    New User
+                </a>
+
+                <form id="frm" action="/Account/Index" class="form-inline" style="float:right;">
+
+                    <span style="display:inline-block;">
+                        @Html.TextBox("q", ViewBag.SearchText as string, new { @class = "form-control input-sm", @placeholder = "Search Keyword" })
+                    </span>
+
+                    <span style="display:inline-block;">
+                        <button type="submit" class="btn btn-sm btn-success" id="btnSearch">
+                            <i class="fa fa-fw fa-search"></i>Search
+                        </button>
+                    </span>
+                    @if (ViewBag.SearchText != null)
+                    {
+                        <span style="display:inline-block;">
+
+                            <a title="Clear Search" href="@Url.Content("~/Account/Index")"><i style="color:red;" class="fa fa-fw fa-times"></i></a>
+                        </span>
+                        <span style="display:inline-block;">
+                            Total Result Found @Model.Count()
+                        </span>
+                    }
+                    <span style="display:inline-block;">
+                        <button data-loading-text="Syncing......." type="button" class="btn btn-sm btn-warning" id="btnSync">
+                            <i class="fa fa-fw fa-refresh"></i>Sync Employee
+                        </button>
+                    </span>
+                </form>
+            </h3>
+            @*<div class="panel panel-primary">
+                <div class="panel-body">*@
+                    @{
+
+                        if (ViewBag.Info != null)
+                        {
+                    <!-- Message OK -->
+                            <div class="alert alert-info">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <strong>@ViewBag.Info</strong>
+                            </div>
+		            <!-- End Message OK -->
+                        }
+                        else if (ViewBag.Error != null)
+                        {
+		            <!-- Message Error -->
+                            <div class="alert alert-danger">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <p><strong>@ViewBag.Error</strong></p>
+                            </div>
+		            <!-- End Message Error -->
+                        }
+                    }
+            
+                    @using GridMvc.Html
+
+                    @Html.Grid(Model).Columns(
+col =>
+{
+    col.Add(i => i.UserID).Titled("ID").Sortable(true);
+    col.Add(i => i.UserName).Titled("User Name").Filterable(true).Sortable(true);
+    col.Add(i => i.FullName).Titled("Full Name").Filterable(true).Sortable(true);
+    col.Add(i => i.Designation.Name).Titled("Designation").Filterable(true).Sortable(true);
+    col.Add(i => i.Email).Titled("Email").Filterable(true).Sortable(true);
+    col.Add(i => i.Department).Titled("Department").Filterable(true).Sortable(true);
+    col.Add(i => i.Supervisor.DisplayText).Titled("Supervisor").Filterable(true).Sortable(true);
+     col.Add().Titled("IsASE").Filterable(true).Sortable(true).Sanitized(false).Encoded(false)
+        .RenderValueAs(m =>
+            @<text>
+                @if (m.IsASE)
+                {
+                    <a href="#" title="Revoke ASE Role" onclick="ASEUpdate(@m.UserID)"><i style="color:green;" class="fa fa-fw fa-check-square"></i></a>
+                }
+                else
+                {
+                    <a href="#" title="Apply ASE Role" onclick="ASEUpdate(@m.UserID)"><i style="color:red;" class="fa fa-fw fa-minus-square"></i></a>
+                }
+            </text>
+        );
+    col.Add().Titled("IsActive").Filterable(true).Sortable(true).Sanitized(false).Encoded(false)
+        .RenderValueAs(m =>
+            @<text>
+                @if (m.Exist)
+                {
+                    <a href="#" title="Deactivate" onclick="ActiveDeactive(@m.UserID)"><i style="color:green;" class="fa fa-fw fa-check-circle"></i></a>
+                }
+                else
+                {
+                    <a href="#" title="Activate" onclick="ActiveDeactive(@m.UserID)"><i style="color:red;" class="fa fa-fw fa-minus-circle"></i></a>
+                }
+            </text>
+        );
+    col.Add().Titled("Action").Encoded(false).Sanitized(false).RenderValueAs(m =>
+        @<text>
+            
+            <a href="@Url.Content("~/Permission/SetPermission?UserID=" + m.UserID)" title="Set Permission"><i class="fa fa-fw fa-cogs"></i></a>
+           
+            <a href="@Url.Content("~/Account/ResetPassword?UserID=" + m.UserID)"
+                data-ajax-success="ResetPasswordMsg" title="Reset Password"
+                data-ajax-method="POST" data-ajax="true"><i class="fa fa-fw fa-repeat"></i></a>
+            
+            
+            <a href="@Url.Content("~/Account/Edit?UserID=" + m.UserID)" title="Edit"><i class="fa fa-fw fa-pencil"></i></a>
+            
+        </text>
+        );
+}
+                 ).WithPaging(15, 20)
+
+                </div>
+            </div>
+        </div>
+    @*</div>
+</div>*@
+@section scripts
+{
+@Scripts.Render("~/bundles/ajax")
+@Scripts.Render("~/bundles/gridmvc")
+<script type="text/javascript">
+    function ResetPasswordMsg(e) {
+        alert(e);
+    }
+
+    function ActiveDeactive(UID) {
+        var conf = confirm("Are sure to change Status?");
+        if (conf) {
+            $.ajax({
+                type: 'POST',
+                url: '/Account/ActiveDeactive',
+                data: { 'UID': UID },
+                success: function (result) {
+                    if (result.flag == 'y') {
+                        alert(result.msg);
+                        location.reload();
+                    }
+                    else {
+                        alert(result.msg);
+                    }
+                }
+            });
+        }
+
+    }
+    function ASEUpdate(UID) {
+        var conf = confirm("Are sure to change ASE Status?");
+        if (conf) {
+            $.ajax({
+                type: 'POST',
+                url: '/Account/ASEUpdate',
+                data: { 'UID': UID },
+                success: function (result) {
+                    if (result.flag == 'y') {
+                        alert(result.msg);
+                        location.reload();
+                    }
+                    else {
+                        alert(result.msg);
+                    }
+                }
+            });
+        }
+
+    }
+    $("#btnSync").click(function () {
+        $("#btnSync").button('loading');
+        $("#frm").prop("action", "/Account/SyncUser");
+        $("#frm").submit();
+    });
+</script>
+}
+
+
+

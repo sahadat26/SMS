@@ -1,0 +1,51 @@
+﻿@model IEnumerable<SMS.Models.setupCalender>
+
+@{
+    ViewBag.Title = "List Of Calender";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h3><i class="fa fa-fw fa-calendar"></i> List of Month</h3>
+<div class="container-fluid">
+  
+
+    <div class="row">
+        
+        <div class="col-lg-12">
+            
+
+            @using GridMvc.Html
+
+            @Html.Grid(Model).Columns(
+            col =>
+            {
+                col.Add(i => i.year).Titled("Year").Sortable(true).Filterable(true);
+                col.Add(i => i.duration).Titled("Duration").Sortable(true).Filterable(true);
+                col.Add(i => i.month).Titled("Month").Sortable(true).Filterable(true);
+                col.Add(i => i.startDate).Titled("Start Date").Format("{0:dd/MM/yyyy}").Sortable(true).Filterable(true);
+                col.Add(i => i.endDate).Titled("End Date").Format("{0:dd/MM/yyyy}").Sortable(true).Filterable(true);
+            }
+            ).WithPaging(15, 20)
+
+
+
+        </div>
+       
+
+       
+       
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <p style="text-align:center;">
+
+                <a href="@Url.Content("~/ConditionMatrix/SetCalender")" class="btn btn-success">
+                    <i class="fa fa-fw fa-backward"></i> Setup Calender
+                </a>
+            </p>
+        </div>
+    </div>
+
+
+</div>
+
+

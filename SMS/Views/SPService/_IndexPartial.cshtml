@@ -1,0 +1,66 @@
+﻿@model IEnumerable<SMS.Models.SPService>
+
+@(
+ Html.DevExpress().CardView(c =>
+      {
+          c.Name = "cardView";
+          c.CallbackRouteValues = new { Controller = "SPService", Action = "IndexPartial",Start=ViewBag.StartDate,End=ViewBag.EndDate,q=ViewBag.SearchText };
+          c.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+          c.SettingsBehavior.AllowFocusedCard = true;
+
+          c.KeyFieldName = "ID";
+          //----------adding columns-----------
+          c.Columns.Add("ID","SID");
+          c.Columns.Add("JobCompletionDate","Work Date").PropertiesEdit.DisplayFormatString = "dd.MM.yyyy";
+          c.Columns.Add("SAPProduct.MATERIALNAME","Product Name");
+          c.Columns.Add("SAPProduct.FormatSerial", "Engine Serial");
+          c.Columns.Add("JobCategory");
+          c.Columns.Add("RunningHour");
+          c.Columns.Add("ServicePerson.DisplayText","Service Person");
+          c.Columns.Add("WorkDetail");
+          
+          
+          //----------------adaptivity setting--------------
+          
+          c.Settings.LayoutMode = DevExpress.Web.Layout.Flow;
+          c.Settings.VerticalScrollBarMode = ScrollBarMode.Auto;
+          c.Styles.FlowCard.Width = 350;
+          c.Styles.FlowCard.Height = System.Web.UI.WebControls.Unit.Percentage(100);
+          c.Styles.FlowCard.CssClass = "FlowCard";
+          c.SettingsPager.EnableAdaptivity = true;
+          
+          //-------------command line------------------------
+          c.Columns.Add(col =>
+          {
+              col.Name = "Edit";
+              col.SetDataItemTemplateContent(container =>
+              {
+                  ViewContext.Writer.Write(
+                      "<a style='font-size:12pt;' title='Edit' href='"+Url.Content("~/SPService/Edit?ID="+DataBinder.Eval(container.DataItem,"ID"))+"'><i class='fa fa-pencil'></i></a>"+
+                      "&nbsp;&nbsp;<a style='font-size:12pt;color:green;' title='Preview' href='" + Url.Content("~/SPService/Preview?ID=" + DataBinder.Eval(container.DataItem, "ID")) + "'><i class='fa fa-arrow-circle-right'></i></a>"
+                      );
+              });
+          });
+          
+          //-------------------add column in card item---------------
+          c.CardLayoutProperties.Items.Add(col =>
+          {
+              col.ColumnName = "Edit";
+              col.VerticalAlign = FormLayoutVerticalAlign.Top;
+              col.HorizontalAlign = FormLayoutHorizontalAlign.Right;
+              
+          });
+          
+          c.CardLayoutProperties.Items.Add("ID");
+          c.CardLayoutProperties.Items.Add("JobCompletionDate");
+          c.CardLayoutProperties.Items.Add("SAPProduct.MATERIALNAME");
+          c.CardLayoutProperties.Items.Add("SAPProduct.FormatSerial");
+          c.CardLayoutProperties.Items.Add("JobCategory");
+          c.CardLayoutProperties.Items.Add("RunningHour");
+          c.CardLayoutProperties.Items.Add("ServicePerson.DisplayText");
+          c.CardLayoutProperties.Items.Add("WorkDetail");
+          
+      }).Bind(Model).GetHtml()
+) 
+
+

@@ -1,0 +1,139 @@
+﻿@model IEnumerable<SMS.Models.WarrantyContract>
+@{
+    ViewBag.Title = " List of Warranty Contract";
+    bool ChkVal = (ViewBag.Chk as bool?).Value;
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 style="color:royalblue;">
+                <i class="fa fa-fw fa-check"></i> Warranty Contracts&nbsp;&nbsp;
+                <a href="@Url.Content("~/Contract/CreateWC")" class="btn btn-sm btn-primary" title="New Warranty Contract">
+                    <i class="fa fa-fw fa-plus-circle"></i>
+                    New Warranty Contract
+                </a>
+
+                <form action="/Contract/WarrantyContracts" class="form-inline" style="float:right;">
+
+                    <div class="form-group">
+                        @Html.CheckBox("WithDate", ChkVal)
+                    </div>
+                    <div class="input-group date">
+                        @Html.TextBox("Start", ViewBag.StartDate as string,
+                                    new
+                                    {
+                                        @readonly = "true",
+                                        @class = "form-control input-sm",
+                                        @data_provide = "datepicker",
+                                        @data_date_autoclose = "true",
+                                        @style = "cursor:pointer;"
+                                    })
+                        <div class="input-group-addon">
+                            <span class="fa fa-fw fa-calendar"></span>
+                        </div>
+                    </div>
+                    <div class="input-group date">
+                        @Html.TextBox("End", ViewBag.EndDate as string,
+                                    new
+                                    {
+                                        @readonly = "true",
+                                        @class = "form-control input-sm",
+                                        @data_provide = "datepicker",
+                                        @data_date_autoclose = "true",
+                                        @style = "cursor:pointer;"
+                                    })
+                        <div class="input-group-addon">
+                            <span class="fa fa-fw fa-calendar"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <input type="text" id="q" name="q" class="form-control input-sm"
+                               placeholder="Search Keywords" value="@ViewBag.Keywords" />
+                        <button id="btnSearch" type="submit" class="btn btn-sm btn-success">
+                            <i class="fa fa-fw fa-search"></i> Search
+                        </button>
+
+                        @if (ViewBag.Keywords != "")
+                        {
+                            <span style="display:inline-block;">
+                                <i style="color:red;" class="fa fa-fw fa-times"></i>
+                                <a title="Clear Search" href="@Url.Content("~/Contract/WarrantyContracts")">Clear Search</a>
+                            </span>
+                        }
+                    </div>
+                </form>
+            </h3>
+
+            @*<div class="panel panel-primary">
+                <div class="panel-body">*@
+            @{
+
+                if (ViewBag.Info != null)
+                {
+                    <!-- Message OK -->
+                    <div class="alert alert-info">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>@ViewBag.Info</strong>
+                    </div>
+		            <!-- End Message OK -->
+                }
+                else if (ViewBag.Error != null)
+                {
+		            <!-- Message Error -->
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <p><strong>@ViewBag.Error</strong></p>
+                    </div>
+		            <!-- End Message Error -->
+                }
+            }
+
+            @using GridMvc.Html
+
+            @Html.Grid(Model).Columns(
+            col =>
+            {
+                col.Add(i => i.WarrantyContractID).Titled("ID").Sortable(true).Filterable(true);
+                col.Add(i => i.Customer.Name).Titled("Customer Name").Filterable(true).Sortable(true);
+                col.Add(i => i.PurchaseDate).Titled("Purchase Date").Filterable(true).Sortable(true).Format("{0:dd MMM, yyyy}");
+                col.Add(i => i.InstallDate).Titled("Install Date").Filterable(true).Sortable(true).Format("{0:dd MMM, yyyy}");
+                col.Add(i => i.WarrantyStart).Titled("Warranty Start").Filterable(true).Sortable(true).Format("{0:dd MMM, yyyy}");
+                col.Add(i => i.WarrantyEnd).Titled("Warranty End").Filterable(true).Sortable(true).Format("{0:dd MMM, yyyy}");
+                col.Add(i => i.Products).Titled("Product").Filterable(true).Sortable(true);
+                col.Add(i => i.TotalServiceAmount).Titled("Service Amount").Filterable(true).Sortable(true);
+                col.Add(i => i.Status).Titled("Status").Filterable(true).Sortable(true);
+                col.Add().Titled("Action").Encoded(false).Sanitized(false).RenderValueAs(m =>
+                    @<text>
+                        @if(m.Status==SMS.Models.EStatus.Open)
+                        {
+                            <a href="@Url.Content("~/Contract/ManageWP?WCID=" + m.WarrantyContractID)" title="Manage Products">@m.Details.Count</a>
+                            <a href="@Url.Content("~/Contract/EditWC?WCID=" + m.WarrantyContractID)" title="Edit"><i class="fa fa-fw fa-pencil"></i></a>
+                        }
+                        @if (File.Exists(Server.MapPath("~/Upload/Attachment/" + (m.AttachmentURL ?? ""))))
+                        {
+                            <a target="_blank" href="@Url.Content("~/Upload/Attachment/"+m.AttachmentURL)" title="Attachment"><i class="fa fa-fw fa-file-pdf-o"></i></a>
+                        }
+            
+                    </text>
+                    );
+            }
+         ).WithPaging(15, 20).SetRowCssClasses(m => m.Status == SMS.Models.EStatus.Close ? "rowclose" : string.Empty)
+
+        </div>
+    </div>
+</div>
+@*</div>
+    </div>*@
+@section scripts
+{
+    @Scripts.Render("~/bundles/gridmvc")
+    <script type="text/javascript">
+
+    </script>
+}
+
+
+

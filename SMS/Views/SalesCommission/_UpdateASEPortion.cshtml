@@ -1,0 +1,114 @@
+﻿@model SMS.Models.VMASEPart
+<div id="DialogCategory" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" style="width:400px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    <i class="fa fa-fw fa-renren" style="color:#0094ff"></i> ASE Portion Update
+                </h4>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("UpdateASEPortion", "SalesCommission", new AjaxOptions { HttpMethod = "POST", OnBegin = "StartEvent", OnSuccess = "SuccessEvent" }, new { @class = "form-horizontal", @autocomplete = "off" }))
+                {
+                    
+                    <div class="col-lg-12">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.InvoiceNo, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.InvoiceNo, new { @class = "form-control",@readonly="on" })
+                            </div>
+                            
+                        </div>
+                        <div class="col-lg-8">
+                            
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.CustomerName, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.CustomerName, new { @class = "form-control", @readonly = "on" })
+                            </div>
+                            
+                        </div>
+                        
+                        
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.SpareAmount, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.SpareAmount, new { @class = "form-control", @readonly = "on" })
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ASEPartPerc, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.ASEPartPerc, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.ASEPartPerc, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ASEPartAmount, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.ASEPartAmount, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.ASEPartAmount, null, new { @class = "text-danger" })
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="col-lg-12">
+                        <p style="text-align:center;">
+                            <button id="btnSubmit" type="submit" class="btn btn-primary" data-loading-text="Saving...">
+                                <i class="fa fa-fw fa-save"></i> Update
+                            </button>
+                        </p>
+                        
+                    </div>
+                    
+                }
+                
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" id="btnClose" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-fw fa-times-circle"></i>  Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+
+    function StartEvent()
+    {
+        $("#btnSubmit").button('loading');
+    }
+    
+    function SuccessEvent(response)
+    {
+        $("#btnSubmit").button('reset');
+        alert(response.msg);
+        if(response.flag=="y")
+        {
+            location.reload();
+        }
+        
+    }
+
+    $("#ASEPartPerc").keyup(
+        function()
+        {
+            //alert(isNaN($("#ASEPartPerc")));
+            if(isNaN($("#ASEPartPerc")))
+            {
+                var perc = $("#ASEPartPerc").val();
+                var SpareAmount = $("#SpareAmount").val();
+                var ASEPart = (perc * SpareAmount) / 100;
+                $("#ASEPartAmount").val(parseFloat(ASEPart).toFixed(2));
+            }
+        }
+        );
+    
+</script>

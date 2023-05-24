@@ -1,0 +1,153 @@
+﻿@model IEnumerable<SMS.Models.SC_Sales>
+@{
+    ViewBag.Title = " List of Sales";
+}
+@Styles.Render("~/Content/Kendo/css")
+<div class="container-fluid">
+
+    <div class="row">
+        <div id="divUpdateASEPortion"></div>
+        <div class="col-lg-12">
+            <h3 style="color:royalblue;">
+                <i class="fa fa-fw fa-shopping-cart"></i> All Sales&nbsp;&nbsp;
+
+
+                <form action="/SalesCommission/IndexSales" class="form-inline" style="float:right;" id="frm">
+
+
+                    <div class="form-group">
+                        @(Html.Kendo().DatePicker().Name("Start")
+                        .Value(ViewBag.StartDate as string).Format("MM/dd/yyyy")
+                                        .HtmlAttributes(new
+                                        {
+                                            @class = "form-control",
+                                            @type = "text",
+                                            @style = "width:140px;"
+                                        }))
+                    </div>
+                    <div class="form-group">
+                        @(Html.Kendo().DatePicker().Name("End")
+                        .Value(ViewBag.EndDate as string).Format("MM/dd/yyyy")
+                                        .HtmlAttributes(new { @class = "form-control", @type = "text", @style = "width:140px;" }))
+                    </div>
+                    <div class="form-group">
+
+                        <input type="text" id="q" name="q" class="form-control input-sm"
+                               placeholder="Search Keywords" value="@ViewBag.SearchText" />
+                        <button id="btnSearch" type="submit" class="btn btn-sm btn-success">
+                            <i class="fa fa-fw fa-search"></i> Search
+                        </button>
+
+                        @if (ViewBag.SearchText != null)
+                        {
+                            <span style="display:inline-block;">
+                                <i style="color:red;" class="fa fa-fw fa-times"></i>
+                                <a title="Clear Search" href="@Url.Content("~/SalesCommission/IndexSales")">Clear Search(@Model.Count())</a>
+                            </span>
+                        }
+                        <button data-loading-text="Syncing......." type="button" class="btn btn-sm btn-warning" id="btnSync">
+                            <i class="fa fa-fw fa-refresh"></i>Sync Sales
+                        </button>
+                    </div>
+                </form>
+            </h3>
+
+            @*<div class="panel panel-primary">
+                <div class="panel-body">*@
+            @{
+
+                if (ViewBag.Info != null)
+                {
+                    <!-- Message OK -->
+                    <div class="alert alert-info">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>@ViewBag.Info</strong>
+                    </div>
+		            <!-- End Message OK -->
+                }
+                else if (ViewBag.Error != null)
+                {
+		            <!-- Message Error -->
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <p><strong>@ViewBag.Error</strong></p>
+                    </div>
+		            <!-- End Message Error -->
+                }
+            }
+
+            @using GridMvc.Html
+            <div class="col-lg-12" style="overflow:scroll;">
+                @Html.Grid(Model).Columns(
+col =>
+{
+    col.Add(i => i.Invoice_Doc).Titled("Invoice No").Sortable(true).Filterable(true);
+    col.Add(i => i.Sale_Type).Titled("Sale Type").Sortable(true).Filterable(true);
+    col.Add(i => i.CustomerDisplay).Titled("Customer Name").Filterable(true).Sortable(true);
+    col.Add(i => i.Invoice_Date).Titled("Invoice Date").Filterable(true).Sortable(true).Format("{0:dd MMM, yyyy}");
+    col.Add(i => i.SpareAmount).Titled("Spare Amount(Inc Vat)").Filterable(true).Sortable(true).Format("{0:0,0}");
+    col.Add(i => i.SpareCollection).Titled("Spare Collection").Filterable(true).Sortable(true).Format("{0:0,0}");
+    col.Add().Titled("ASE Portion").Encoded(false).Sanitized(false).RenderValueAs(m =>
+        @<text>
+            @if(m.Sale_Type=="SPARE")
+            {
+                <a href="#" title="ASE Portion" onclick="UpdateASEPortion(@m.Invoice_Doc)">@m.ASE_Portion.ToString("N0")</a>    
+            }
+            
+        </text>
+        );
+    
+    col.Add(i => i.ASECollection).Titled("ASE Collection").Filterable(true).Sortable(true).Format("{0:0,0}");
+    col.Add(i => i.Lube_Qty).Titled("Lube Qty").Filterable(true).Sortable(true).Format("{0:0,0}");
+    col.Add(i => i.SMDisplay).Titled("Sales Manager").Filterable(true).Sortable(true);
+    col.Add(i => i.SPDisplay).Titled("Sales Person").Filterable(true).Sortable(true);
+    col.Add(i => i.ASEDisplay).Titled("ASE Name(s)").Filterable(true).Sortable(true);
+    col.Add().Titled("Action").Encoded(false).Sanitized(false).RenderValueAs(m =>
+        @<text>
+            @if(m.Sale_Type=="SPARE")
+            {
+                <a href="@Url.Content("~/SalesCommission/ManageAC?Invoice=" + m.Invoice_Doc)" title="ASE Contribution"><i style="color:green;" class="fa fa-fw fa-renren"></i></a>
+            }
+                
+        </text>
+        );
+}
+).WithPaging(15, 20)
+            </div>
+            
+
+        </div>
+    </div>
+</div>
+@*</div>
+    </div>*@
+@section scripts
+{
+    @Scripts.Render("~/bundles/gridmvc")
+    @Scripts.Render("~/bundles/ajax")
+    @Scripts.Render("~/bundles/Kendo")
+    <script type="text/javascript">
+        $("#btnSync").click(function () {
+            $("#btnSync").button('loading');
+            $("#frm").prop("action", "/SalesCommission/SyncSales");
+            $("#frm").submit();
+        });
+        function UpdateASEPortion(InvoiceNo) {
+            $.ajax(
+             {
+                 type: 'GET',
+                 data: { 'InvoiceNo': InvoiceNo },
+                 url: '/SalesCommission/UpdateASEPortion',
+                 datatype: 'html',
+                 success: function (result) {
+                     $("#divUpdateASEPortion").html(result);
+                     $("#DialogCategory").modal();
+                 }
+             }
+             );
+        }
+    </script>
+}
+
+
+

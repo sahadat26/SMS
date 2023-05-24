@@ -1,0 +1,376 @@
+﻿@model SMS.Models.ManpowerCost
+
+@{
+    ViewBag.Title = "Manage Man Power Cost";
+    var job = ViewBag.Job as SMS.Models.Job;
+}
+@Styles.Render("~/Content/Kendo/css")
+<div class="container-fluid">
+    <div class="col-lg-9">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 style="color:royalblue;"><i class="fa fa-fw fa-user"></i> Manage Man Power Cost</h3>
+                <div class="panel panel-primary">
+
+                    <div class="panel-body">
+                        <br />
+                        @{
+
+                            if (ViewBag.Info != null)
+                            {
+                    <!-- Message OK -->
+                                <div class="alert alert-info">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                    <strong>@ViewBag.Info</strong>
+                                </div>
+		            <!-- End Message OK -->
+                            }
+                            else if (ViewBag.Error != null)
+                            {
+		            <!-- Message Error -->
+                                <div class="alert alert-danger">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                    <p><strong>@ViewBag.Error</strong></p>
+                                </div>
+		            <!-- End Message Error -->
+                            }
+                        }
+                        @using (Html.BeginForm("SaveManPowerCost", "Job", FormMethod.Post, new { @class = "form-inline", @autocomplete = "off" }))
+                        {
+                            @Html.HiddenFor(m => m.JobID)
+                            @Html.HiddenFor(m => m.ManpowerCostID)
+                            <div class="col-lg-12">
+                                
+                                <div class="form-group">
+                                    @Html.LabelFor(t => t.EmployeeID)<br />
+                                    @Html.DropDownListFor(t => t.EmployeeID, ViewBag.Employees as SelectList, "Select Employee", 
+                                    new { @class = "form-control input-sm",@onchange="ChangeUpdate()" })
+                                    @Html.ValidationMessageFor(t => t.EmployeeID, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(t => t.DailyAllowanceType)<br />
+                                    @Html.EnumDropDownListFor(t => t.DailyAllowanceType, "Select A Type", new { @class = "form-control input-sm", @onchange = "ChangeUpdate()" })
+                                    @Html.ValidationMessageFor(t => t.DailyAllowanceType, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(t => t.AccomodationType)<br />
+                                    @Html.EnumDropDownListFor(t => t.AccomodationType, "Select A Type", new { @class = "form-control input-sm", @onchange = "ChangeUpdate()" })
+                                    @Html.ValidationMessageFor(t => t.AccomodationType, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.StartTime, new { @class = "control-label" }) 
+                                    <br />
+                                    @*<div class="input-group date" style="width:90%;">
+                                        @Html.TextBox("StartTime", DateTime.Today.ToShortDateString(),
+                                        new
+                                        {
+                                            @readonly = "true",
+                                            @class = "form-control input-sm",
+                                            @data_provide = "datepicker",
+                                            @data_date_autoclose = "true",
+                                            @data_date_format = "mm/dd/yyyy",
+                                            @style = "cursor:pointer"
+
+                                        })
+                                        <div class="input-group-addon">
+                                            <span class="fa fa-fw fa-calendar"></span>
+                                        </div>
+                                    </div>*@
+                                    @Html.Kendo().DateTimePickerFor(m => m.StartTime).Value(Model.StartTime).Format("MM/dd/yyyy HH:mm").HtmlAttributes(new { @style = "width:170px;" })
+                                    
+                                    @Html.ValidationMessageFor(t => t.StartTime, null, new { @class = "text-danger" })
+
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.EndTime, new { @class = "control-label" })<br />
+                                    @*<div class="input-group date" style="width:90%;">
+                                        @Html.TextBox("EndTime", DateTime.Today.ToShortDateString(),
+                                        new
+                                        {
+                                            @readonly = "true",
+                                            @class = "form-control input-sm",
+                                            @data_provide = "datepicker",
+                                            @data_date_autoclose = "true",
+                                            @data_date_format = "mm/dd/yyyy",
+                                            @style = "cursor:pointer"
+
+                                        })
+                                        <div class="input-group-addon">
+                                            <span class="fa fa-fw fa-calendar"></span>
+                                        </div>
+                                    </div>*@
+                                    @Html.Kendo().DateTimePickerFor(m => m.EndTime).Value(Model.EndTime).Format("MM/dd/yyyy HH:mm").HtmlAttributes(new { @style = "width:170px;" })
+                                    @Html.ValidationMessageFor(t => t.EndTime, null, new { @class = "text-danger" })
+
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(t => t.WorkDescription)<br />
+                                    @Html.TextBoxFor(t => t.WorkDescription, new { @class = "form-control input-sm" })
+                                    @Html.ValidationMessageFor(t => t.WorkDescription, null, new { @class = "text-danger" })
+                                </div>
+                                
+                                <div class="form-group">
+                                    @Html.LabelFor(t => t.WorkingHour)<span style="color:green;">&nbsp;&nbsp;X @Model.WorkingHourRate</span><br />
+                                    @Html.TextBoxFor(t => t.WorkingHour, new { @class = "form-control input-sm" })
+                                    @Html.ValidationMessageFor(t => t.WorkingHour, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(t => t.OTHour)<span style="color:green;">&nbsp;&nbsp;X @Model.OTHourRate</span><br />
+                                    @Html.TextBoxFor(t => t.OTHour, new { @class = "form-control input-sm" })
+                                    @Html.ValidationMessageFor(t => t.OTHour, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(t => t.HolidayHour)<span style="color:green;">&nbsp;&nbsp;X @Model.HolidayHourRate</span><br />
+                                    @Html.TextBoxFor(t => t.HolidayHour, new { @class = "form-control input-sm" })
+                                    @Html.ValidationMessageFor(t => t.HolidayHour, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(t => t.TravelHour)<br />
+                                    @Html.TextBoxFor(t => t.TravelHour, new { @class = "form-control input-sm" })
+                                    @Html.ValidationMessageFor(t => t.TravelHour, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(t => t.NumberOfMeal)<span style="color:green;">&nbsp;&nbsp;X @Model.FoodAllowance</span><br />
+                                    @Html.TextBoxFor(t => t.NumberOfMeal, new { @class = "form-control input-sm" })
+                                    @Html.ValidationMessageFor(t => t.NumberOfMeal, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(t => t.NumberOfDay)<span style="color:green;">&nbsp;&nbsp;X (@(Model.DailyAllowance+" + "+Model.Accomodation))</span><br />
+                                    @Html.TextBoxFor(t => t.NumberOfDay, new { @class = "form-control input-sm" })
+                                    @Html.ValidationMessageFor(t => t.NumberOfDay, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(t => t.TransportCost)<br />
+                                    @Html.TextBoxFor(t => t.TransportCost, new { @class = "form-control input-sm" })
+                                    @Html.ValidationMessageFor(t => t.TransportCost, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(t => t.OtherCost)<br />
+                                    @Html.TextBoxFor(t => t.OtherCost, new { @class = "form-control input-sm" })
+                                    @Html.ValidationMessageFor(t => t.OtherCost, null, new { @class = "text-danger" })
+                                </div>
+                                    
+                                <div class="col-lg-12">
+                                    <p style="text-align:center">
+                                        <br />
+                                        <button type="submit" class="btn btn-sm btn-primary" id="btnSubmit">
+                                            <i class="fa fa-fw fa-save"></i> Save Man Power Cost
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="col-lg-12" style="padding-bottom:10px;">
+                            <table class="table table-condensed table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Employee Name</th>
+                                        <th>Start</th>
+                                        <th>End</th>
+                                        <th>Work Description</th>
+                                        <th>Man Hour Cost</th>
+                                        <th>Food Cost</th>
+                                        <th>Transport Cost</th>
+                                        <th>Other Cost</th>
+                                        <th>Tour Allowance</th>
+                                        <th>Total Expense</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var row in job.ManpowerCosts.OrderBy(a => a.ManpowerCostID))
+                                    {
+                                        <tr>
+                                            <td>@row.Employee.DisplayText</td>
+                                            <td>@Html.DisplayFor(m => row.StartTime)</td>
+                                            <td>@Html.DisplayFor(m => row.EndTime)</td>
+                                            <td>@Html.DisplayFor(m=>row.WorkDescription)</td>
+                                            <td>@Html.DisplayFor(m => row.ManHourCost)</td>
+                                            <td>@Html.DisplayFor(m => row.FoodCost)</td>
+                                            <td>@Html.DisplayFor(m => row.TransportCost)</td>
+                                            <td>@Html.DisplayFor(m => row.OtherCost)</td>
+                                            <td>@(row.TotalDailyAllowance+row.TotalAccomodation)</td>
+                                            <td>@Html.DisplayFor(m=>row.TotalExpense)</td>
+                                            <td>
+                                                <a href="#" onclick="DeleteMC(@row.ManpowerCostID)" title="Delete"><i style="color:red;" class="fa fa-fw fa-times"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr style="font-weight:bold;">
+                                        <td colspan="4" style="text-align:center;">Grand Total</td>
+                                        <td>@job.ManpowerCosts.Sum(c=>c.ManHourCost).ToString("N2")</td>
+                                        <td>@job.ManpowerCosts.Sum(c => c.FoodCost).ToString("N2")</td>
+                                        <td>@job.ManpowerCosts.Sum(c => c.TransportCost).ToString("N2")</td>
+                                        <td>@job.ManpowerCosts.Sum(c => c.OtherCost).ToString("N2")</td>
+                                        <td>@job.ManpowerCosts.Sum(c => (c.TotalAccomodation+c.TotalDailyAllowance)).ToString("N2")</td>
+                                        <td>@job.ManpowerCosts.Sum(c => c.TotalExpense).ToString("N2")</td>
+                                        <td>
+                                            
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-3">
+        <h3 style="color:royalblue;"><i class="fa fa-fw fa-file"></i> Job Info</h3>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <table class="table table-condensed table-striped">
+                    <tbody>
+
+                        <tr>
+                            <td class="col-lg-4"><label>Query Date</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.QueryDate)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Customer Name</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.Customer.Name)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Job No</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.JobNo)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Bill No</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.BillNo)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Wing Name</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.WingName)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Query For</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.QueryFor)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Query Type</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.QueryType)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Query Description</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.QueryDescription)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Job Create Date</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.JobCardCreateDate)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Is this Job Card for Tour</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.IsTour)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Product</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.Raw(job.ProductNames)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Service People</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.Raw(job.ServicePeople)</td>
+                        </tr>
+
+                        <tr>
+                            <td class="col-lg-4"><label>Service Charge</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.ServiceCharge)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Workshop Charge</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">@Html.DisplayFor(m => job.WorkshopCharge)</td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-4"><label>Attachment</label></td>
+                            <td class="col-lg-2">:</td>
+                            <td class="col-lg-6">
+                                @if (File.Exists(Server.MapPath("~/Upload/Attachment/" + (job.AttachmentURL ?? ""))))
+                                {
+                                    <a target="_blank" href="@Url.Content("~/Upload/Attachment/"+job.AttachmentURL)" title="Attachment"><i class="fa fa-fw fa-file-pdf-o"></i></a>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <p style="text-align:center">
+            <br />
+            @if(job.ManpowerCosts.Count>0)
+            {
+                <a href="#" onclick="FinishJob(@job.JobID)" class="btn btn-lg btn-primary">
+                    <i class="fa fa-fw fa-check"></i> Finish Job
+                </a>    
+            }
+            
+            <a href="@Url.Content("~/Job/JobCards")" class="btn btn-lg btn-success">
+                <i class="fa fa-fw fa-backward"></i> Back to List
+            </a>
+        </p>
+    </div>
+    @Html.Partial("_ModalDialog")
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/select2")
+    @Scripts.Render("~/bundles/ajax")
+    @Scripts.Render("~/bundles/Kendo")
+    <script type="text/javascript">
+
+       
+        $("#EmployeeID").select2();
+        
+        function ChangeUpdate() {
+            var EmployeeID = $("#EmployeeID").val();
+            var DAType=$("#DailyAllowanceType").val();
+            var AType=$("#AccomodationType").val();
+            location.href = "/Job/ManageManPowerCost?JID=" + @job.JobID + "&EmpID="
+                + EmployeeID+"&DAType="+DAType+"&AType="+AType;
+        }
+        
+        function FinishJob(JID) {
+            $.ajax(
+                {
+                    type: 'GET',
+                    url: '/Job/FinishJob/',
+                    data: { 'JID': JID },
+                    datatype: 'html',
+                    success: function (result) {
+                        $(".modal-body").html(result);
+                        $("#DivDialog").modal();
+                    }
+                }
+                );
+        }
+        function DeleteMC(MCID)
+        {
+            var msg=confirm("Are you sure to delete?");
+            if(msg)
+            {
+                location.href="/Job/DeleteManpowerCost?ID="+MCID+"&JobID="+"@Model.JobID";
+            }
+        }
+    </script>
+}
+
+

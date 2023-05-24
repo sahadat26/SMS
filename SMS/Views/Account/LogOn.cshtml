@@ -1,0 +1,127 @@
+﻿@model SMS.Models.LogOnModel
+@{
+    ViewBag.Title = "Sign In";
+}
+<style type="text/css">
+    body
+    {
+        background:url('/Content/images/body.jpg');
+        background-size:cover;
+        background-repeat:no-repeat;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <br /><br />
+            <div class="panel panel-primary">
+
+                <div class="panel-heading">
+                    <i class="fa fa-fw fa-sign-in" style="color:#fff"></i> Sign In
+                </div>
+                <div class="panel-body" style="overflow-y:scroll;">
+                    <!--Message-->
+                    @if (ViewBag.Info != null)
+                    {
+
+                        <div class="alert alert-success">
+                            <a class="close" data-dismiss="alert" href="#">&times;</a>
+                            <strong>@ViewBag.Info</strong>
+                        </div>
+
+                    }
+                    else if (ViewBag.Error != null)
+                    {
+
+                        <div class="alert alert-danger">
+                            <a class="close" data-dismiss="alert" href="#">&times;</a>
+                            <strong>@ViewBag.Error</strong>
+                        </div>
+
+                    }
+                    @using (Html.BeginForm("LogOn", "Account", FormMethod.Post, new { @class = "form-signin", role = "form", @autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m=>m.ReturnUrl)
+                        @*<input type="text" value="@ViewBag.ReturnUrl" name="ReturnUrl" />*@
+                        <h2 class="form-signin-heading"> Sign in Here</h2>
+                        <hr />
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-fw fa-columns"></i>
+                            </span>
+                            @Html.EnumDropDownListFor(m => m.Module,"Select Module", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Module, "", new { @class = "text-danger" })
+                        </div>
+                        <br />
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-fw fa-columns"></i>
+                            </span>
+                            @Html.EnumDropDownListFor(m => m.BusinessUnit,"Select Business Unit", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.BusinessUnit, "", new { @class = "text-danger" })
+                        </div>
+                        <br />
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-fw fa-user"></i>
+                            </span>
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Employee ID" })
+                            @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                        </div>
+                        <br />
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-fw fa-lock"></i>
+                            </span>
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        </div>
+                        <br />
+                        <input type="submit" value="Sign In" class="btn btn-lg btn-primary btn-block" />
+                    }
+                    @*<br />
+                    <button data-loading-text="Please wait......" style="float:left;" class="btn btn-sm btn-info"  id="btnNewPass"><b><i class="fa fa-fw fa-key"></i>  don't have password</b></button>*@
+                    @*<button style="float:right;" class="btn btn-sm btn-success"  id="btnNewUser"><b><i class="fa fa-fw fa-user"></i>  Register Here</b></button>*@
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4"></div>
+        @*@Html.Partial("_ModalDialog")*@
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/ajax")
+    <script type="text/javascript">
+        //$("#btnNewPass").click(
+        //function () {
+        //    $("#btnNewPass").button('loading');
+        //    $.ajax(
+        //        {
+        //            type: 'GET',
+        //            url: '/Account/UserLogOn/',
+        //            datatype: 'html',
+        //            success: function (result) {
+        //                $(".modal-body").html(result);
+        //                $("#DivDialog").modal();
+        //                $("#btnNewPass").button('reset');
+        //            }
+        //        }
+        //        );
+        //}
+        //);
+        $("#Module").focus();
+    </script>
+}
+
+
+
+
+
+
+
+

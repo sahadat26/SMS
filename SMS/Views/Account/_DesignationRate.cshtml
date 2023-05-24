@@ -1,0 +1,50 @@
+﻿@model SMS.Models.Designation 
+<h3 style="color:royalblue;"><i class="fa fa-fw fa-sitemap"></i> Rate of @Model.Name</h3>
+<div class="panel panel-primary">
+    <div class="panel-body">
+        <table class="table table-condensed table-striped">
+            <tbody>
+                <tr>
+                    <td class="col-lg-4"><label>Working Hour Rate</label></td>
+                    <td class="col-lg-2">:</td>
+                    <td class="col-lg-6">@Html.DisplayFor(m => Model.WorkingHourRate)</td>
+                </tr>
+                <tr>
+                    <td class="col-lg-4"><label>Holiday Hour Rate</label></td>
+                    <td class="col-lg-2">:</td>
+                    <td class="col-lg-6">@Html.DisplayFor(m => Model.HolidayHourRate)</td>
+                </tr>
+                <tr>
+                    <td class="col-lg-4"><label>OT Hour Rate</label></td>
+                    <td class="col-lg-2">:</td>
+                    <td class="col-lg-6">@Html.DisplayFor(m => Model.OTHourRate)</td>
+                </tr>
+                <tr>
+                    <td class="col-lg-4"><label>Food Allowance</label></td>
+                    <td class="col-lg-2">:</td>
+                    <td class="col-lg-6">@Html.DisplayFor(m => Model.FoodAllowance)</td>
+                </tr>
+                <tr>
+                    <td class="col-lg-4"><label>Daily Allowance</label></td>
+                    <td class="col-lg-2">:</td>
+                    <td class="col-lg-6">@Html.DisplayFor(m => Model.DailyAllowance)</td>
+                </tr>
+                <tr>
+                    <td class="col-lg-4"><label>Daily Allowance(CV)</label></td>
+                    <td class="col-lg-2">:</td>
+                    <td class="col-lg-6">@Html.DisplayFor(m => Model.DailyAllowanceCV)</td>
+                </tr>
+                <tr>
+                    <td class="col-lg-4"><label>MC Accomodation</label></td>
+                    <td class="col-lg-2">:</td>
+                    <td class="col-lg-6">@Html.DisplayFor(m => Model.MCAccomodation)</td>
+                </tr>
+                <tr>
+                    <td class="col-lg-4"><label>OC Accomodation</label></td>
+                    <td class="col-lg-2">:</td>
+                    <td class="col-lg-6">@Html.DisplayFor(m => Model.OCAccomodation)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

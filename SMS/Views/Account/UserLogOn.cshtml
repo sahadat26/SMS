@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "Set Password";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3><i class="fa fa-fw fa-magnet"></i>Set Password</h3>
+
+            
+
+            @{
+
+                if (ViewBag.Info != null)
+                {
+                <!-- Message OK -->
+                    <div class="alert alert-info">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>@ViewBag.Info</strong>
+                    </div>
+		        <!-- End Message OK -->
+                }
+                else if (ViewBag.Error != null)
+                {
+		        <!-- Message Error -->
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <p><strong>@ViewBag.Error</strong></p>
+                    </div>
+		        <!-- End Message Error -->
+                }
+            }
+            @using (Ajax.BeginForm("SetPassword", "Account", new AjaxOptions { HttpMethod = "POST", OnSuccess = "SuccessEvent" }, new { @class = "form-horizontal", @id = "frmeTAC" }))
+            {
+                
+                @Html.AntiForgeryToken()
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        @Html.Label("Your Name", new { @class = "control-label col-lg-4" })
+                        <div class="col-lg-8">
+                            @Html.DropDownList("UserID",ViewBag.Users as SelectList ,"Your Name", new { @class = "form-control",@style="width:90%" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                        <div class="form-group">
+                            @Html.Label("New Password", new { @class = "control-label col-lg-4" })
+                            <div class="col-lg-8">
+                                @Html.Password("pass", "", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            @Html.Label("Confirm Password", new { @class = "control-label col-lg-4" })
+                            <div class="col-lg-8">
+                                @Html.Password("conf", "", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            @Html.Label("OTP", new { @class = "control-label col-lg-4" })
+                            <div class="col-lg-8">
+                                @Html.Password("otp", "", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12" style="text-align:right;">
+                        <button data-loading-text="Changing....." id="btnSetPass" type="button" class="btn btn-success">
+                            <i class="fa fa-fw fa-save"></i> Set Password
+                        </button>
+                        <button id="btnGenOTP" type="button" class="btn btn-info" data-loading-text="Generating....">
+                            <i class="fa fa-fw fa-ge"></i> Generate OTP
+                        </button>
+                    </div>
+            }
+
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/select2")
+
+<script type="text/javascript">
+    function SuccessEvent(result) {
+        if (result.success) {
+            alert(result.message);
+        }
+        else {
+            alert(result.message);
+        }
+        $("#btnSetPass").button('reset');
+        $("#btnGenOTP").button('reset');
+    }
+    
+    
+    $("#btnGenOTP").click(
+        function () {
+            $("#frmeTAC").prop("action", "/Account/SendeTAC");
+            $("#frmeTAC").submit();
+            $("#btnGenOTP").button('loading');
+        }
+        );
+    $("#btnSetPass").click(
+        function () {
+            $("#frmeTAC").prop("action", "/Account/SetPassword");
+            $("#frmeTAC").submit();
+            
+            $("#btnSetPass").button('loading');
+        }
+        );
+    $("#UserID").select2();
+</script>
+
+
+
+
+
+

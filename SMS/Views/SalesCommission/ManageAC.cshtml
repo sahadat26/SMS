@@ -1,0 +1,256 @@
+﻿@model SMS.Models.SC_Sales
+
+@{
+    ViewBag.Title = "ASE Contribution";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 style="color:royalblue;"><i class="fa fa-fw fa-renren"></i> ASE Contribution</h3>
+            <div class="panel panel-primary">
+
+                <div class="panel-body">
+                    @{
+
+                        if (ViewBag.Info != null)
+                        {
+                                        <!-- Message OK -->
+                            <div class="alert alert-info">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <strong>@ViewBag.Info</strong>
+                            </div>
+		                                <!-- End Message OK -->
+                        }
+                        else if (ViewBag.Error != null)
+                        {
+		                                <!-- Message Error -->
+                            <div class="alert alert-danger">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <p><strong>@ViewBag.Error</strong></p>
+                            </div>
+		                                <!-- End Message Error -->
+                        }
+                    }
+                    <div class="col-lg-7">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                Sales Information
+                            </div>
+                            <div class="panel-body">
+
+                                @using (Html.BeginForm("ManageAC", "SalesCommission", FormMethod.Post, new { @class = "form-horizontal", @id = "frmCont" }))
+                                {
+                                    @Html.HiddenFor(m => m.Invoice_Doc)
+                                    @Html.HiddenFor(m => m.Invoice_Date)
+                                    @Html.HiddenFor(m => m.ASESpareAmount)
+                                }
+                                <div class="col-lg-12">
+                                    <table class="table table-condensed table-responsive table-striped">
+
+                                        <tbody>
+                                            <tr>
+                                                <td style="width:20%;text-align:right;">
+                                                    <h4><strong>Invoice No</strong></h4>
+                                                </td>
+                                                <td style="width:5%;text-align:center;">
+                                                    <h4><strong>:</strong></h4>
+                                                </td>
+                                                <td style="width:25%;text-align:left;">
+                                                    <h4>@Model.Invoice_Doc</h4>
+                                                </td>
+                                                <td style="width:20%;text-align:right;">
+                                                    <h4><strong>Invoice Date</strong></h4>
+                                                </td>
+                                                <td style="width:5%;text-align:center;">
+                                                    <h4><strong>:</strong></h4>
+                                                </td>
+                                                <td style="width:30%;text-align:left;">
+                                                    <h4>@Model.Invoice_Date.ToString("dd.MM.yyyy")</h4>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width:20%;text-align:right;">
+                                                    <h4><strong>Customer Name</strong></h4>
+                                                </td>
+                                                <td style="width:5%;text-align:center;">
+                                                    <h4><strong>:</strong></h4>
+                                                </td>
+                                                <td style="width:25%;text-align:left;">
+                                                    <h4>@Model.CustomerDisplay</h4>
+                                                </td>
+                                                <td style="width:20%;text-align:right;">
+                                                    <h4><strong>Sales Manager</strong></h4>
+                                                </td>
+                                                <td style="width:5%;text-align:center;">
+                                                    <h4><strong>:</strong></h4>
+                                                </td>
+                                                <td style="width:30%;text-align:left;">
+                                                    <h4>@Model.SMDisplay</h4>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width:20%;text-align:right;">
+                                                    <h4><strong>Sales Person</strong></h4>
+                                                </td>
+                                                <td style="width:5%;text-align:center;">
+                                                    <h4><strong>:</strong></h4>
+                                                </td>
+                                                <td style="width:25%;text-align:left;">
+                                                    <h4>@Model.SPDisplay</h4>
+                                                </td>
+                                                <td style="width:20%;text-align:right;">
+                                                    <h4><strong>ASE Names</strong></h4>
+                                                </td>
+                                                <td style="width:5%;text-align:center;">
+                                                    <h4><strong>:</strong></h4>
+                                                </td>
+                                                <td style="width:30%;text-align:left;">
+                                                    <h4>@Model.ASEDisplay</h4>
+                                                </td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td style="width:20%;text-align:right;">
+                                                    <h4><strong>Spare Amount</strong></h4>
+                                                </td>
+                                                <td style="width:5%;text-align:center;">
+                                                    <h4><strong>:</strong></h4>
+                                                </td>
+                                                <td style="width:25%;text-align:left;">
+                                                    <h4>@Model.SpareAmount.ToString("N2")</h4>
+                                                </td>
+                                                <td style="width:20%;text-align:right;">
+                                                    <h4><strong>Spare Collection</strong></h4>
+                                                </td>
+                                                <td style="width:5%;text-align:center;">
+                                                    <h4><strong>:</strong></h4>
+                                                </td>
+                                                <td style="width:30%;text-align:left;">
+                                                    <h4>@Model.SpareCollection.ToString("N2")</h4>
+                                                </td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td style="width:20%;text-align:right;">
+                                                    <h4><strong>ASE Sale Portion</strong></h4>
+                                                </td>
+                                                <td style="width:5%;text-align:center;">
+                                                    <h4><strong>:</strong></h4>
+                                                </td>
+                                                <td style="width:25%;text-align:left;">
+                                                    <h4>@Model.ASE_Portion.ToString("N2")</h4>
+                                                </td>
+                                                <td style="width:20%;text-align:right;">
+                                                    <h4><strong>ASE Part Collection</strong></h4>
+                                                </td>
+                                                <td style="width:5%;text-align:center;">
+                                                    <h4><strong>:</strong></h4>
+                                                </td>
+                                                <td style="width:30%;text-align:left;">
+                                                    <h4>@Model.ASECollection.ToString("N2")</h4>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width:20%;text-align:right;">
+                                                    <h4><strong>Lube Qty</strong></h4>
+                                                </td>
+                                                <td style="width:5%;text-align:center;">
+                                                    <h4><strong>:</strong></h4>
+                                                </td>
+                                                <td style="width:25%;text-align:left;">
+                                                    <h4>@Model.Lube_Qty.ToString("N0")</h4>
+                                                </td>
+                                                <td style="width:20%;text-align:right;">
+                                                    
+                                                </td>
+                                                <td style="width:5%;text-align:center;">
+                                                    
+                                                </td>
+                                                <td style="width:30%;text-align:left;">
+                                                    
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5" id="divCont">
+                        @Html.Partial("_Contribution", Model.VMCont)
+                    </div>
+                    
+                    <div class="col-lg-12">
+                        <p style="text-align:center;">
+                            <button data-loading-text="Saving......" type="submit" class="btn btn-primary" id="btnSubmit">
+                                <i class="fa fa-fw fa-save"></i> Submit Contribution
+                            </button>
+                            <a href="@Url.Content("~/SalesCommission/IndexSales")" class="btn btn-success">
+                                <i class="fa fa-fw fa-backward"></i> Back to List
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/select2")
+    @Scripts.Render("~/bundles/ajax")
+    <script type="text/javascript">
+        $("#Cont_ASEID").select2();
+        function ColorRowCont(id) {
+            $("#rowCont" + id).attr('class', 'edit');
+            $("#Cont_ContrPerc").on("keyup", function () {
+                CalAseAmount();
+            });
+            $("#Cont_SpareAmount").val($("#ASESpareAmount").val());
+        }
+
+        function ClearContInput() {
+            $("#Cont_SL").val(0);
+            $("#Cont_ASEID").val(0);
+            $("#Cont_ContrPerc").val(0);
+            $("#Cont_ContrAmount").val(0);
+
+            $("#Cont_ContrPerc").on("keyup", function () {
+                CalAseAmount();
+            });
+            $("#Cont_SpareAmount").val($("#ASESpareAmount").val());
+        }
+        $("#btnSubmit").click(
+            function () {
+                
+                if ($("#frmCont").valid()) {
+                    $("#btnSubmit").button('loading');
+                }
+                $("#frmCont").submit();
+            }
+        );
+        $("#Cont_ContrPerc").keyup(
+            function()
+            {
+                CalAseAmount();
+            }
+            
+        );
+        function CalAseAmount() {
+            //alert(isNaN($("#Cont_ContrPerc")));
+            if (isNaN($("#Cont_ContrPerc"))) {
+                var perc = $("#Cont_ContrPerc").val();
+                var SpareAmount = $("#ASESpareAmount").val();
+                var ASEPart = (perc * SpareAmount) / 100;
+                $("#Cont_ContrAmount").val(parseFloat(ASEPart).toFixed(2));
+            }
+        }
+        
+    </script>
+}
+
+

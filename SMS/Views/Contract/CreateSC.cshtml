@@ -1,0 +1,162 @@
+﻿@model SMS.Models.ServiceContract
+
+@{
+    ViewBag.Title = "New Service Contract";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-8">
+            <h3 style="color:royalblue;"><i class="fa fa-fw fa-gavel"></i> New Service Contract</h3>
+            <div class="panel panel-primary">
+
+                <div class="panel-body">
+                    <br />
+                    @{
+
+                        if (ViewBag.Info != null)
+                        {
+                    <!-- Message OK -->
+                            <div class="alert alert-info">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <strong>@ViewBag.Info</strong>
+                            </div>
+		            <!-- End Message OK -->
+                        }
+                        else if (ViewBag.Error != null)
+                        {
+		            <!-- Message Error -->
+                            <div class="alert alert-danger">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <p><strong>@ViewBag.Error</strong></p>
+                            </div>
+		            <!-- End Message Error -->
+                        }
+                    }
+                    @using (Html.BeginForm("CreateSC", "Contract", FormMethod.Post, new { @class = "form-horizontal", @enctype = "multipart/form-data", @autocomplete = "off" }))
+                    {
+                        @Html.HiddenFor(m => m.BusinessUnit)
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.CustomerID, new { @class = "control-label" })<br />
+                                @Html.DropDownListFor(t => t.CustomerID, ViewBag.Customers as SelectList, "Select Customer", new { @class = "form-control input-sm" })
+                                @Html.ValidationMessageFor(t => t.CustomerID, null, new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ContactID, new { @class = "control-label" })<br />
+                                @Html.DropDownListFor(t => t.ContactID, new List<SelectListItem>(), "Extra Contact", new { @class = "form-control input-sm" })
+                                @Html.ValidationMessageFor(t => t.ContactID, null, new { @class = "text-danger" })
+                            </div>
+                            
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.BillingCycle, new { @class = "control-label" })
+                                @Html.EnumDropDownListFor(t => t.BillingCycle, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.BillingCycle, null, new { @class = "text-danger" })
+                            </div>
+
+
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ContractStartDate, new { @class = "control-label" })
+                                <div class="input-group date" style="width:90%;">
+                                    @Html.TextBox("ContractStartDate", DateTime.Today.ToShortDateString(),
+                                new
+                                {
+                                    @readonly = "true",
+                                    @class = "form-control",
+                                    @data_provide = "datepicker",
+                                    @data_date_autoclose = "true",
+                                    @data_date_format = "mm/dd/yyyy",
+                                    @style = "cursor:pointer"
+
+                                })
+                                    <div class="input-group-addon">
+                                        <span class="fa fa-fw fa-calendar"></span>
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(t => t.ContractStartDate, null, new { @class = "text-danger" })
+
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ContractEndDate, new { @class = "control-label" })
+                                <div class="input-group date" style="width:90%;">
+                                    @Html.TextBox("ContractEndDate", DateTime.Today.ToShortDateString(),
+                                new
+                                {
+                                    @readonly = "true",
+                                    @class = "form-control",
+                                    @data_provide = "datepicker",
+                                    @data_date_autoclose = "true",
+                                    @data_date_format = "mm/dd/yyyy",
+                                    @style = "cursor:pointer"
+
+                                })
+                                    <div class="input-group-addon">
+                                        <span class="fa fa-fw fa-calendar"></span>
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(t => t.ContractEndDate, null, new { @class = "text-danger" })
+
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Attachment", new { @class = "control-label" })<br />
+                                <input type="file" id="FileToUpload" name="FileToUpload" title="Browse"
+                                       data-filename-placement="inside" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <p style="text-align:center;">
+                                <button type="submit" class="btn btn-primary" id="btnSubmit">
+                                    <i class="fa fa-fw fa-save"></i> Create New Service Contract
+                                </button>
+                            </p>
+                        </div>
+
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/select2")
+    <script type="text/javascript">
+        $('input[type=file]').bootstrapFileInput();
+        $("#CustomerID").change(
+            function () {
+                var cid = $("#CustomerID").val();
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/Contract/GetContacts',
+                        data: { 'CID': cid },
+                        datatype: 'json',
+                        success: function (result) {
+                            var C = $("#ContactID");
+                            C.empty();
+                            C.append('<option value="">Extra Contact</option>');
+                            $.each(result, function (i, item) {
+                                C.append('<option value="' + item.ID + '">' +
+                                item.Name + '</option>');
+                            }
+                            );
+                        }
+                    }
+                    );
+            }
+        );
+
+        $("#CustomerID").select2();
+    </script>
+
+}
+
+

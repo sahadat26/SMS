@@ -1,0 +1,99 @@
+﻿@model IEnumerable<SMS.Models.SC_ConditionMatrix>
+@{
+    ViewBag.Title = "List of Conditions";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 style="color:royalblue;">
+                <i class="fa fa-fw fa-filter"></i> List of Conditions&nbsp;&nbsp;
+                <a href="@Url.Content("~/ConditionMatrix/Create/")" class="btn btn-sm btn-primary" title="Create New Condition">
+                    <i class="fa fa-fw fa-plus-circle"></i>
+                    Create New Condition
+                </a>
+
+                <form action="/ConditionMatrix/Index" class="form-inline" style="float:right;">
+
+                    <span style="display:inline-block;">
+                        @Html.TextBox("q", ViewBag.SearchText as string, new { @class = "form-control input-sm", @placeholder = "Search Keyword" })
+                    </span>
+
+                    <span style="display:inline-block;">
+                        <button type="submit" class="btn btn-sm btn-success" id="btnSearch">
+                            <i class="fa fa-fw fa-search"></i>Search
+                        </button>
+                    </span>
+                    @if (ViewBag.SearchText != null)
+                    {
+                        <span style="display:inline-block;">
+
+                            <a title="Clear Search" href="@Url.Content("~/ConditionMatrix/Index")"><i style="color:red;" class="fa fa-fw fa-times"></i></a>
+                        </span>
+                        <span style="display:inline-block;">
+                            Total Result Found @Model.Count()
+                        </span>
+                    }
+                </form>
+            </h3>
+            @*<div class="panel panel-primary">
+                <div class="panel-body">*@
+            @{
+
+                if (ViewBag.Info != null)
+                {
+                    <!-- Message OK -->
+                    <div class="alert alert-info">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>@ViewBag.Info</strong>
+                    </div>
+		            <!-- End Message OK -->
+                }
+                else if (ViewBag.Error != null)
+                {
+		            <!-- Message Error -->
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <p><strong>@ViewBag.Error</strong></p>
+                    </div>
+		            <!-- End Message Error -->
+                }
+            }
+            @using GridMvc.Html
+
+            @Html.Grid(Model).Columns(
+col =>
+{
+    col.Add(i => i.ID).Titled("ID").Sortable(true);
+    col.Add(i => i.ConditionType).Titled("Type").Filterable(true).Sortable(true);
+    col.Add(i => i.SL).Titled("SL").Filterable(true).Sortable(true);
+    col.Add(i => i.Perc).Titled("Percent(%)").Filterable(true).Sortable(true);
+    col.Add(i => i.RangeStart).Titled("Range Start").Filterable(true).Sortable(true).Format("{0:0,0}");
+    col.Add(i => i.RangeEnd).Titled("Range End").Filterable(true).Sortable(true).Format("{0:0,0}");
+    col.Add(i => i.Bonus).Titled("Bonus").Filterable(true).Sortable(true);
+    col.Add(i => i.FixedAmount).Titled("Fixed Amount").Filterable(true).Sortable(true);
+    col.Add(i => i.ContractType).Titled("Contract").Filterable(true).Sortable(true);
+    col.Add(i => i.LtrQty).Titled("LtrQty").Filterable(true).Sortable(true);
+    col.Add().Titled("Action").Encoded(false).Sanitized(false).RenderValueAs(m =>
+        @<text>
+            <a href="@Url.Content("~/ConditionMatrix/Edit?CID=" + m.ID)" title="Edit"><i class="fa fa-fw fa-pencil"></i></a>
+        </text>
+        );
+}
+).WithPaging(15, 20)
+
+        </div>
+    </div>
+</div>
+@*</div>
+    </div>*@
+@section scripts
+{
+
+    @Scripts.Render("~/bundles/gridmvc")
+
+}
+
+
+

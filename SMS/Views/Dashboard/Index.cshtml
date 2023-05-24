@@ -1,0 +1,368 @@
+﻿@model IEnumerable<SMS.Models.Job>
+
+@{
+    ViewBag.Title = "Dashboard";
+    var FilterUser = ViewBag.FilterUser as SMS.Models.EFilterUser?;
+    DateTime? start = Convert.ToDateTime(ViewBag.StartDate);
+    DateTime? end = Convert.ToDateTime(ViewBag.EndDate);
+    var OnCallRevenueExpense = (from row in Model.Where(j=>j.QueryFor==SMS.Models.EQueryFor.OnCall)
+                          group row by new { row.Wing } 
+                              into g
+                              select
+                                  new
+                                  {
+                                      Wing = g.Key.Wing.Name,
+                                      Expense = g.Sum(s => s.Expense),
+                                      Revenue = g.Sum(s => s.ServiceCharge),
+                                      Profit=g.Sum(s=>(s.ServiceCharge-s.Expense))
+                                  }).ToList();
+    var SCRevenueExpense = (from row in Model.Where(j => j.QueryFor == SMS.Models.EQueryFor.ServiceContract)
+                                group row by new { row.Wing }
+                                    into g
+                                    select
+                                        new
+                                        {
+                                            Wing = g.Key.Wing.Name,
+                                            Expense = g.Sum(s => s.Expense),
+                                            Revenue = g.Sum(s => 
+                                                s.ServiceContract.TotalCollectedAmount(start,
+                                                end)),
+                                            Profit = g.Sum(s => (s.ServiceCharge - s.Expense))
+                                        }).ToList();
+    var WCRevenueExpense = (from row in Model.Where(j => j.QueryFor == SMS.Models.EQueryFor.Warranty)
+                            group row by new { row.Wing }
+                                into g
+                                select
+                                    new
+                                    {
+                                        Wing = g.Key.Wing.Name,
+                                        Expense = g.Sum(s => s.Expense),
+                                        Revenue = g.Sum(s => s.WarrantyContract.TotalServiceAmount),
+                                        Profit = g.Sum(s => (s.ServiceCharge - s.Expense))
+                                    }).ToList();
+    
+}
+@Styles.Render("~/Content/Kendo/css")
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            
+                <form action="/Dashboard/Index" class="form-inline">
+                    <div class="form-group">
+                        @Html.EnumDropDownListFor(m => FilterUser, 
+                        new {@class="form-control input-sm",@onchange="Refresh()" })
+                    </div>
+                    <div class="input-group date">
+                        @Html.TextBox("Start", ViewBag.StartDate as string,
+                                    new
+                                    {
+                                        @readonly = "true",
+                                        @class = "form-control input-sm",
+                                        @data_provide = "datepicker",
+                                        @data_date_autoclose = "true",
+                                        @style = "cursor:pointer;"
+                                    })
+                        <div class="input-group-addon">
+                            <span class="fa fa-fw fa-calendar"></span>
+                        </div>
+                    </div>
+                    <div class="input-group date">
+                        @Html.TextBox("End", ViewBag.EndDate as string,
+                                    new
+                                    {
+                                        @readonly = "true",
+                                        @class = "form-control input-sm",
+                                        @data_provide = "datepicker",
+                                        @data_date_autoclose = "true",
+                                        @style = "cursor:pointer;"
+                                    })
+                        <div class="input-group-addon">
+                            <span class="fa fa-fw fa-calendar"></span>
+                        </div>
+                    </div>
+                    <button id="btnRefresh" type="submit" class="btn btn-sm btn-success">
+                        <i class="fa fa-fw fa-refresh"></i> Refresh
+                    </button>
+                </form>
+            
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-question fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">
+                                <span class="notification red">@ViewBag.NoQ</span> 
+                            </div>
+                            <div>Number of Query</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="@Url.Content("~/Job/Queries")">
+                    <div class="panel-footer">
+                        <span class="pull-left">View All</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-rub fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">
+                                <span class="notification info">@ViewBag.NoP</span>
+                            </div>
+                            <div>Pending Jobs</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="@Url.Content("~/Job/Queries?QState=1")">
+                    <div class="panel-footer">
+                        <span class="pull-left">View All</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-file-text fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">
+                                
+                                <span class="notification yellow">@ViewBag.NoJ</span>
+                                
+                            </div>
+                            <div>Job In Progress</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="@Url.Content("~/Job/JobCards")">
+                    <div class="panel-footer">
+                        <span class="pull-left">View All</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-archive fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">
+                                
+                               <span class="notification yellow">@ViewBag.NoCJ</span>
+                                
+                            </div>
+                            <div>Complete Job Cards</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="@Url.Content("~/Job/JobCardArchive")">
+                    <div class="panel-footer">
+                        <span class="pull-left">View All</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>        
+    </div>
+    <div class="row">
+        @if(OnCallRevenueExpense.Count>0)
+        {
+            <div class="col-lg-4">
+            <h4 style="color:royalblue;">
+                <i class="fa fa-fw fa-bar-chart-o"></i> Revenue Vs. Expense On Call Service
+            </h4>
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    @{
+                        Html.Kendo().Chart(OnCallRevenueExpense).Name("barOnCallRevenueExpenseProduct")
+                            .Legend(leg =>
+                                {
+                                    leg.Visible(true);
+                                    leg.Position(ChartLegendPosition.Top);
+                                }
+                                )
+                            .ChartArea(area =>
+                                area.Height(400)
+                                )
+                            .Series(series =>
+                            {
+                                series.Bar(t => t.Revenue).Name("Revenue").Color("LightGreen").Labels(lbl => lbl.
+                                    Template("#= FormatLongNumber(value) #").Visible(true).Rotation(90));
+                                series.Bar(t => t.Expense).Name("Expense").Color("Orange").Labels(lbl => lbl.
+                                    Template("#= FormatLongNumber(value) #").Visible(true).Rotation(90));
+                            })
+                            .CategoryAxis(axis =>
+                                {
+                                    axis.Categories(cat => cat.Wing).Labels(lbl => lbl.Font("16px Bold"));
+                                }
+
+                            )
+                            .ValueAxis(v =>
+                                {
+                                    v.Numeric().Min(0).Max(OnCallRevenueExpense.Max(val => ((double)val.Revenue)+(double)val.Expense+1000)).Labels(lbl => lbl.
+                                    Template("#= FormatLongNumber(value) #").Visible(true).Rotation(90)).Title(tit => tit.Text("Amount In BDT").Margin(20, 0, 0, 0));
+                                }
+                                )
+                            .Render();
+                    }
+                </div>
+            </div>
+        </div>
+                
+        }
+        
+        @if(SCRevenueExpense.Count>0)
+        {
+            <div class="col-lg-4">
+            <h4 style="color:royalblue;">
+                <i class="fa fa-fw fa-bar-chart-o"></i> Collection Vs. Expense On Service Contract
+            </h4>
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    @{
+                        Html.Kendo().Chart(SCRevenueExpense).Name("barSCRevenueExpenseProduct")
+                        .Legend(leg =>
+                            {
+                                leg.Visible(true);
+                                leg.Position(ChartLegendPosition.Top);
+                            }
+                            )
+                        .ChartArea(area =>
+                            area.Height(400)
+                            )
+                        .Series(series =>
+                        {
+                            series.Bar(t => t.Revenue).Name("Collected").Color("LightGreen").Labels(lbl => lbl.
+                                Template("#= FormatLongNumber(value) #").Visible(true).Rotation(90));
+                            series.Bar(t => t.Expense).Name("Expense").Color("Orange").Labels(lbl => lbl.
+                                Template("#= FormatLongNumber(value) #").Visible(true).Rotation(90));
+                        })
+                        .CategoryAxis(axis =>
+                            {
+                                axis.Categories(cat => cat.Wing).Labels(lbl => lbl.Font("16px Bold"));
+                            }
+
+                        )
+                        .ValueAxis(v =>
+                            {
+                                v.Numeric().Min(0).Max(SCRevenueExpense.Max(val => ((double)val.Revenue) + ((double)val.Expense)+1000)).Labels(lbl => lbl.
+                                Template("#= FormatLongNumber(value) #").Visible(true).Rotation(90)).Title(tit => tit.Text("Amount In BDT").Margin(20, 0, 0, 0));
+                            }
+                            )
+                        .Render();
+                    }
+                </div>
+            </div>
+        </div>
+        }
+        @if (WCRevenueExpense.Count > 0)
+        {
+            <div class="col-lg-4">
+                <h4 style="color:royalblue;">
+                    <i class="fa fa-fw fa-bar-chart-o"></i> Revenue Vs. Expense On Warranty Contract
+                </h4>
+                <div class="panel panel-primary">
+                    <div class="panel-body">
+                        @{
+                            Html.Kendo().Chart(WCRevenueExpense).Name("barWCRevenueExpenseProduct")
+                            .Legend(leg =>
+                                {
+                                    leg.Visible(true);
+                                    leg.Position(ChartLegendPosition.Top);
+                                }
+                                )
+                            .ChartArea(area =>
+                                area.Height(400)
+                                )
+                            .Series(series =>
+                            {
+                                series.Bar(t => t.Revenue).Name("Service Charge").Color("LightGreen").Labels(lbl => lbl.
+                                    Template("#= FormatLongNumber(value) #").Visible(true).Rotation(90));
+                                series.Bar(t => t.Expense).Name("Expense").Color("Orange").Labels(lbl => lbl.
+                                    Template("#= FormatLongNumber(value) #").Visible(true).Rotation(90));
+                            })
+                            .CategoryAxis(axis =>
+                                {
+                                    axis.Categories(cat => cat.Wing).Labels(lbl => lbl.Font("16px Bold"));
+                                }
+
+                            )
+                            .ValueAxis(v =>
+                            {
+                                v.Numeric().Min(0).Max(WCRevenueExpense.Max(val => ((double)val.Revenue + (double)val.Expense+1000))).Labels(lbl => lbl.
+                                Template("#= FormatLongNumber(value) #").Visible(true).Rotation(90)).Title(tit => tit.Text("Amount In BDT").Margin(20, 0, 0, 0));
+                                }
+                                )
+                            .Render();
+                        }
+                    </div>
+        </div>
+    </div>
+}
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/Kendo")
+    <script type="text/javascript">
+        function FormatLongNumber(value) {
+            if (value == 0) {
+                return 0;
+            }
+            else {
+                // for testing
+                //value = Math.floor(Math.random()*1001);
+
+                // hundreds
+                if (value <= 999) {
+                    return value.toFixed(2);
+                }
+                    // thousands
+                else if (value >= 1000 && value <= 999999) {
+                    return (value / 1000).toFixed(2) + 'K';
+                }
+                    // millions
+                else if (value >= 1000000 && value <= 999999999) {
+                    return (value / 1000000).toFixed(2) + 'M';
+                }
+                    // billions
+                else if (value >= 1000000000 && value <= 999999999999) {
+                    return (value / 1000000000).toFixed(2) + 'B';
+                }
+                else
+                    return value.toFixed(2);
+            }
+        }
+        function Refresh()
+        {
+            $("#btnRefresh").click();
+        }
+    </script>
+
+}

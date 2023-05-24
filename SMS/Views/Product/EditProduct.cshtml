@@ -1,0 +1,149 @@
+﻿@model SMS.Models.Product
+
+@{
+    ViewBag.Title = "Update Capital Item Category";
+    var ItemCategory = Model;
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div id="PartialCategory">
+        </div>
+        <div class="col-lg-8">
+            <h3 style="color:royalblue;"><i class="fa fa-fw fa-rub"></i> New Product</h3>
+            <div class="panel panel-primary">
+
+                <div class="panel-body">
+                    <br />
+                    @{
+
+                        if (ViewBag.Info != null)
+                        {
+                    <!-- Message OK -->
+                            <div class="alert alert-info">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <strong>@ViewBag.Info</strong>
+                            </div>
+		            <!-- End Message OK -->
+                        }
+                        else if (ViewBag.Error != null)
+                        {
+		            <!-- Message Error -->
+                            <div class="alert alert-danger">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <p><strong>@ViewBag.Error</strong></p>
+                            </div>
+		            <!-- End Message Error -->
+                        }
+                    }
+                    @using (Html.BeginForm("EditProduct", "Product", FormMethod.Post, new { @class = "form-horizontal", @enctype = "multipart/form-data", @autocomplete = "off" }))
+                    {
+                        @Html.HiddenFor(m => m.BusinessUnit)
+                        @Html.HiddenFor(m=>m.ProductID)
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ProductName, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.ProductName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.ProductName, null, new { @class = "text-danger" })
+
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Prefix, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.Prefix, new { @class = "form-control", style = "text-transform:uppercase;" })
+                                @Html.ValidationMessageFor(t => t.Prefix, null, new { @class = "text-danger" })
+
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ProductCategoryID, new { @class = "control-label" })
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <button id="btnManageCategory" type="button" class="btn btn-primary" title="Manage Product Category">
+                                            <i class="fa fa-fw fa-sitemap"></i>
+                                        </button>
+                                    </span>
+                                    @Html.DropDownListFor(t => t.ProductCategoryID, ViewBag.Categories as SelectList, "Product Category", new { @class = "form-control", @style = "width:90%;" })
+
+                                </div>
+
+                                @Html.ValidationMessageFor(t => t.ProductCategoryID, null, new { @class = "text-danger" })
+
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Image to Upload", new { @class = "control-label" })<br />
+                                <input type="file" id="FileToUpload" name="FileToUpload" title="Browse"
+                                       data-filename-placement="inside" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <p style="text-align:center;">
+                                <button type="submit" class="btn btn-primary" id="btnSubmit">
+                                    <i class="fa fa-fw fa-save"></i> Next Step
+                                </button>
+                            </p>
+                        </div>
+
+                    }
+
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <h3 style="color:royalblue;"><i class="fa fa-fw fa-laptop"></i> Product Info</h3>
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <div class="thumbnail">
+                        @if ((ItemCategory.ImageURL ?? "") != "")
+                        {
+                            <img class="img-responsive" src="@Url.Content("~/Upload/Image/"+ItemCategory.ImageURL)" alt="@ItemCategory.ProductName" />
+                        }
+                        else
+                        {
+                            <img class="img-responsive" src="@Url.Content("~/Upload/Image/no_preview.png")" alt="@ItemCategory.ProductName" />
+                        }
+
+                    </div>
+                    <div class="caption" style="text-align:center;">
+                        <h3>@ItemCategory.ProductName</h3>
+                        <label class="label label-info">@ItemCategory.ProductCategory.CategoryName</label>
+                        <label class="label label-warning">@ItemCategory.Prefix</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/ajax")
+    <script type="text/javascript">
+        $('input[type=file]').bootstrapFileInput();
+        $("#btnManageCategory").click(
+            function () {
+                $.ajax(
+                 {
+                     type: 'GET',
+                     url: '/Product/ManageCategory',
+                     datatype: 'html',
+                     success: function (result) {
+                         $("#PartialCategory").html(result);
+                         $("#DialogCategory").modal();
+                     }
+                 }
+                 );
+            }
+       );
+        function RefreshCategoryList() {
+            location.reload();
+        }
+    </script>
+
+}
+
+

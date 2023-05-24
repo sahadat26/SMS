@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="image/png" href="@Url.Content("~/favicon.png")" />
+    <title>SMS: @ViewBag.Title</title>
+
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/font-awesome-4.1.0/css/font")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    
+    @RenderSection("head", required: false)
+
+</head>
+
+<body>
+    <div id="wrapper">
+        @Html.Partial("_navbar")
+        <div id="page-wrapper">
+            @RenderBody()
+        </div>
+        <div style="background-color: #204562;" class="navbar navbar-inverse navbar-fixed-bottom">
+            <p class="text-info" style="text-align:center;padding-top:15px;color:#e7e7bb;">
+                &copy; All Rights Reserved by <a href="http://www.energypac.com" target="_blank">Energypac, IT</a>
+            </p>
+        </div>
+    </div>
+    <!-- /#wrapper -->
+    @*@Scripts.Render("~/bundles/jqueryform")*@
+    @Scripts.Render("~/bundles/bootstrap")
+    
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        //var h = $(window).height()-170;
+        //$("#page-wrapper").css("min-height",h+"px");
+    </script>
+</body>
+</html>
+

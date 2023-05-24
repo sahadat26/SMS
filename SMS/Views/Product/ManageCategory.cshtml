@@ -1,0 +1,126 @@
+﻿@model SMS.Models.ProductCategory
+<div id="DialogCategory" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" style="width:600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    <i class="fa fa-fw fa-sitemap" style="color:#0094ff"></i> Manage Category
+                </h4>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("CategoryAddUpdate", "Product", new AjaxOptions { HttpMethod = "POST", OnBegin = "StartEvent", OnSuccess = "SuccessEvent" }, new { @class = "form-horizontal", @autocomplete = "off" }))
+                {
+                    @Html.HiddenFor(i => i.ProductCategoryID)
+                    <div class="form-group">
+                        <div class="col-lg-5">
+                            @Html.TextBoxFor(t => t.CategoryName, new { @class = "form-control", @placeholder = "Category Name" })
+                            @Html.ValidationMessageFor(t => t.CategoryName, null, new { @class = "text-danger" })
+                        </div>
+                        <div class="col-lg-4">
+                            @Html.DropDownListFor(t => t.ParentId,ViewBag.CatList as SelectList,"Parent Category", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(t => t.ParentId, null, new { @class = "text-danger" })
+                        </div>
+                        <div class="col-lg-3">
+                            <button id="btnSubmit" type="submit" class="btn btn-primary" data-loading-text="Saving...">
+                                <i class="fa fa-fw fa-save"></i> Save
+                            </button>
+                        </div>
+                    </div>
+                }
+                <table class="table table-condensed table-bordered col-lg-12">
+                    <thead>
+                        <tr>
+                            <th class="col-lg-5">
+                                Category Name
+                            </th>
+                            <th class="col-lg-4">
+                                Parent Category
+                            </th>
+                            <th style="text-align:center;" class="col-lg-3">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblCategory">
+                        @foreach (var item in (ViewBag.Categories as List<SMS.Models.ProductCategory>))
+                        {
+                            <tr class="fakeclass" id="@("tblrow"+item.ProductCategoryID)">
+                                <td>@Html.DisplayFor(m => item.CategoryName)</td>
+                                <td>@Html.DisplayFor(m => item.ParentCategory.CategoryName)</td>
+                                <td style="text-align:center;">
+                                    <a onclick="CategoryEdit(@item.ProductCategoryID)" href="#">
+                                        <i class="fa fa-fw fa-pencil-square"></i> Edit
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" id="btnClose" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-fw fa-times-circle"></i>  Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+
+    function StartEvent()
+    {
+        $("#btnSubmit").button('loading');
+    }
+    function CategoryEdit(ID)
+    {
+        $.ajax(
+                 {
+                     type: 'GET',
+                     url: '/Product/CategoryEdit',
+                     data:{'ID':ID},
+                     datatype: 'html',
+                     success: function (result) {
+                         $("#ProductCategoryID").val(result.ProductCategoryID);
+                         $("#CategoryName").val(result.CategoryName);
+                         $("#ParentId").val(result.ParentId);
+                         $(".fakeclass").css("background","");
+                         $("#tblrow"+ID).css("background","orange");
+                     }
+                 }
+                 );
+    }
+    function SuccessEvent(response)
+    {
+        if(response.flag=="true")
+        {
+            var bodyhtml = "";
+            $.each(response.listdata, function (i, val) {
+                bodyhtml = bodyhtml + "<tr class='fakeclass' id='tblrow" + val.ProductCategoryID + "'>" +
+                  "<td>"+val.CategoryName+"</td>"+
+                  "<td>"+val.Parent+"</td>"+
+                       "<td style='text-align:center;'>"+
+                           "<a href='#' onclick='CategoryEdit("+val.ProductCategoryID+")'>"+
+                                "<i class='fa fa-fw fa-pencil-square'></i> Edit"+
+                           "</a>"
+               "</td>"+
+           "</tr>";
+           });
+           $("#tblCategory").html(bodyhtml);
+           $("#ProductCategoryID").val(0);
+           $("#CategoryName").val("");
+           $("#ParentId").val(0);
+           //RefreshPropertyList();
+       }
+       $("#btnSubmit").button('reset');
+       alert(response.msg);
+    }
+    $('#DialogCategory').on('hide.bs.modal', function () 
+    {
+        RefreshCategoryList();
+    });
+</script>

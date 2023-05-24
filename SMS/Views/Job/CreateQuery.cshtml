@@ -1,0 +1,173 @@
+﻿@model SMS.Models.Job
+
+@{
+    ViewBag.Title = "New Query";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-8">
+            <h3 style="color:royalblue;"><i class="fa fa-fw fa-question"></i> New Query</h3>
+            <div class="panel panel-primary">
+
+                <div class="panel-body">
+                    <br />
+                    @{
+
+                        if (ViewBag.Info != null)
+                        {
+                    <!-- Message OK -->
+                            <div class="alert alert-info">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <strong>@ViewBag.Info</strong>
+                            </div>
+		            <!-- End Message OK -->
+                        }
+                        else if (ViewBag.Error != null)
+                        {
+		            <!-- Message Error -->
+                            <div class="alert alert-danger">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <p><strong>@ViewBag.Error</strong></p>
+                            </div>
+		            <!-- End Message Error -->
+                        }
+                    }
+                    @using (Html.BeginForm("CreateQuery", "Job", FormMethod.Post, new { @class = "form-horizontal", @enctype = "multipart/form-data", @autocomplete = "off" }))
+                    {
+                        @Html.HiddenFor(m => m.BusinessUnit)
+                        
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.QueryType, new { @class = "control-label" })
+                                @Html.EnumDropDownListFor(t => t.QueryType, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.QueryType, null, new { @class = "text-danger" })
+                            </div>
+                            
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.QueryDate, new { @class = "control-label" })
+                                <div class="input-group date" style="width:90%;">
+                                    @Html.TextBox("QueryDate", DateTime.Today.ToShortDateString(),
+                                new
+                                {
+                                    @readonly = "true",
+                                    @class = "form-control",
+                                    @data_provide = "datepicker",
+                                    @data_date_autoclose = "true",
+                                    @data_date_format = "mm/dd/yyyy",
+                                    @style = "cursor:pointer"
+
+                                })
+                                    <div class="input-group-addon">
+                                        <span class="fa fa-fw fa-calendar"></span>
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(t => t.QueryDate, null, new { @class = "text-danger" })
+
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.QueryFor, new { @class = "control-label" })
+                                @Html.EnumDropDownListFor(t => t.QueryFor, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.QueryFor, null, new { @class = "text-danger" })
+                            </div>
+                            
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.CustomerID, new { @class = "control-label" })<br />
+                                @Html.DropDownListFor(t => t.CustomerID, ViewBag.Customers as SelectList, "Select Customer", new { @class = "form-control input-sm" })
+                                @Html.ValidationMessageFor(t => t.CustomerID, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ContactID, new { @class = "control-label" })<br />
+                                @Html.DropDownListFor(t => t.ContactID, new List<SelectListItem>(), "Extra Contact", new { @class = "form-control input-sm" })
+                                @Html.ValidationMessageFor(t => t.ContactID, null, new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ServiceContractID, new { @class = "control-label" })<br />
+                                @Html.DropDownListFor(t => t.ServiceContractID, new List<SelectListItem>(), "Service Contracts", new { @class = "form-control input-sm" })
+                                @Html.ValidationMessageFor(t => t.ServiceContractID, null, new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.WarrantyContractID, new { @class = "control-label" })<br />
+                                @Html.DropDownListFor(t => t.WarrantyContractID, new List<SelectListItem>(), "Warranty Contracts", new { @class = "form-control input-sm" })
+                                @Html.ValidationMessageFor(t => t.WarrantyContractID, null, new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.QueryDescription, new { @class = "control-label" })
+                                @Html.TextAreaFor(t => t.QueryDescription, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.QueryDescription, null, new { @class = "text-danger" })
+                            </div>
+                            
+                        </div>
+
+                        <div class="col-lg-12">
+                            <p style="text-align:center;">
+                                <button type="submit" class="btn btn-primary" id="btnSubmit">
+                                    <i class="fa fa-fw fa-save"></i> Create Query
+                                </button>
+                            </p>
+                        </div>
+
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/select2")
+    <script type="text/javascript">
+
+        $("#CustomerID").change(
+            function () {
+                var cid = $("#CustomerID").val();
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/Job/OnChangeCustomer',
+                        data: { 'CID': cid },
+                        datatype: 'json',
+                        success: function (result) {
+                            var C = $("#ContactID");
+                            C.empty();
+                            C.append('<option value="">Extra Contact</option>');
+                            $.each(result.contacts, function (i, item) {
+                                C.append('<option value="' + item.ID + '">' +
+                                item.Name + '</option>');
+                            }
+                            );
+                            var S = $("#ServiceContractID");
+                            S.empty();
+                            S.append('<option value="">Service Contracts</option>');
+                            $.each(result.services, function (i, item) {
+                                S.append('<option value="' + item.ID + '">' +
+                                item.Name + '</option>');
+                            }
+                            );
+                            var W = $("#WarrantyContractID");
+                            W.empty();
+                            W.append('<option value="">Warranty Contracts</option>');
+                            $.each(result.warranties, function (i, item) {
+                                W.append('<option value="' + item.ID + '">' +
+                                item.Name + '</option>');
+                            }
+                            );
+                        }
+                    }
+                    );
+            }
+        );
+
+        $("#CustomerID").select2();
+    </script>
+
+}
+
+

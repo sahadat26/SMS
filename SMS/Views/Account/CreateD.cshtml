@@ -1,0 +1,124 @@
+﻿@model SMS.Models.Designation
+
+@{
+    ViewBag.Title = "Create Designation";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8">
+            <h3 style="color:royalblue;"><i class="fa fa-fw fa-sitemap"></i> Create New Designation</h3>
+            <div class="panel panel-primary">
+
+                <div class="panel-body">
+                    <br />
+                    @{
+
+                        if (ViewBag.Info != null)
+                        {
+                    <!-- Message OK -->
+                            <div class="alert alert-info">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <strong>@ViewBag.Info</strong>
+                            </div>
+		            <!-- End Message OK -->
+                        }
+                        else if (ViewBag.Error != null)
+                        {
+		            <!-- Message Error -->
+                            <div class="alert alert-danger">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                <p><strong>@ViewBag.Error</strong></p>
+                            </div>
+		            <!-- End Message Error -->
+                        }
+                    }
+                    @using (Html.BeginForm("CreateD", "Account", FormMethod.Post, new { @class = "form-horizontal" }))
+                    {
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Name, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.Name, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.Name, null, new { @class = "text-danger" })
+
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.WorkingHourRate, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.WorkingHourRate, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.WorkingHourRate, null, new { @class = "text-danger" })
+
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.HolidayHourRate, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.HolidayHourRate, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.HolidayHourRate, null, new { @class = "text-danger" })
+
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.DailyAllowance, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.DailyAllowance, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.DailyAllowance, null, new { @class = "text-danger" })
+
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.DailyAllowanceCV, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.DailyAllowanceCV, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.DailyAllowanceCV, null, new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.OTHourRate, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.OTHourRate, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.OTHourRate, null, new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.FoodAllowance, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.FoodAllowance, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.FoodAllowance, null, new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.MCAccomodation, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.MCAccomodation, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.MCAccomodation, null, new { @class = "text-danger" })
+
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.OCAccomodation, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.OCAccomodation, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.OCAccomodation, null, new { @class = "text-danger" })
+
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.JobGrade, new { @class = "control-label" })
+                                @Html.TextBoxFor(t => t.JobGrade, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(t => t.JobGrade, null, new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <p style="text-align:center;">
+                                <button type="submit" class="btn btn-primary" id="btnSubmit">
+                                    <i class="fa fa-fw fa-save"></i> Create New Designation
+                                </button>
+                                <a href="@Url.Content("~/Account/IndexD")" class="btn btn-success">
+                                    <i class="fa fa-fw fa-backward"></i> Back to List
+                                </a>
+                            </p>
+                        </div>
+
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
